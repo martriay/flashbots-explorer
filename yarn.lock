@@ -71,11 +71,6 @@
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.1.1.tgz#71ecb3444eb21947ceefe768a25efaba4f8eceb0"
   integrity sha512-fxNKxRrjNXdNYNMhAVrv1nz0gIMX3JhFizTA9lNrEC8+aY3JR00GZTPhuG785RZGvnHXCdYCGHeAhqw9uRNRrA==
 
-"@heroicons/react@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@heroicons/react/-/react-1.0.1.tgz#66d25f6441920bd5c2146ea27fd33995885452dd"
-  integrity sha512-uikw2gKCmqnvjVxitecWfFLMOKyL9BTFcU4VM3hHj9OMwpkCr5Ke+MRMyY2/aQVmsYs4VTq7NCFX05MYwAHi3g==
-
 "@next/env@10.2.0":
   version "10.2.0"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-10.2.0.tgz#154dbce2efa3ad067ebd20b7d0aa9aed775e7c97"

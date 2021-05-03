@@ -4,7 +4,7 @@ import Transactions from '../components/Transactions';
 
 export default function Home({ blocks }) {
   return (
-    <div className='container flex flex-col'>
+    <div className='App container flex flex-col'>
       <Head>
         <title> ⚡ Flashbots Explorer 🔍</title>
         <meta name="description" content="Explore Flashbots transactions" />

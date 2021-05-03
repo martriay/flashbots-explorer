@@ -10,7 +10,6 @@ export default function Transactions({ bundles }) {
     setOpenModal(true);
   };
 
-  console.log(bundles);
   return <div className="w-10/12 self-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -53,22 +52,22 @@ const OpenBookIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6"
 function Bundle({ index, bundle, setBundleAndOpen }) {
   return <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
     <td className="block-number px-6 py-4 whitespace-nowrap text-center">
-      <a className="flex text-sm justify-center" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
+      <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
         { ExternalLinkIcon }
-        <span className="ml-3"> { bundle.block_number } </span>
+        <span className="ml-3"> { bundle?.block_number } </span>
       </a>
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
       <span className="text-sm">
-      Ξ { (bundle.miner_reward / (10 ** 18)).toFixed(4) }
+      Ξ { (bundle?.miner_reward / (10 ** 18)).toFixed(4) }
       </span>
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">{ bundle.gas_used} </div>
+      <div className="text-sm text-gray-900">{ bundle?.gas_used} </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
       <div className="text-sm text-gray-900">
-        { Math.round(bundle.miner_reward / bundle.gas_used / (10 ** 9)) } gwei
+        { Math.round(bundle?.miner_reward / bundle?.gas_used / (10 ** 9)) } gwei
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">
