@@ -127,7 +127,7 @@ function BundleTransaction(transaction, index: number) {
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
       <div className="text-sm text-gray-900">
-        { Math.round(transaction?.gas_used / (10 ** 9)) } gwei
+        { Math.round(transaction?.gas_price / (10 ** 9)) } gwei
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
