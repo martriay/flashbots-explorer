@@ -5,7 +5,8 @@ export default function Transactions({ bundles }) {
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
 
-  const setBundleAndOpen = (bundle) => {
+  const setBundleAndOpen = (e, bundle) => {
+    e.preventDefault();
     setBundle(bundle);
     setOpenModal(true);
   };
@@ -71,7 +72,7 @@ function Bundle({ index, bundle, setBundleAndOpen }) {
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">
-      <a href="#" onClick={ () => setBundleAndOpen(bundle) }> { OpenBookIcon }</a>
+      <a href="#" onClick={ (e) => setBundleAndOpen(e, bundle) }> { OpenBookIcon }</a>
     </td>
   </tr>;
 }
