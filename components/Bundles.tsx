@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import BundleModal from './BundleModal';
+import styles from '../styles/Home.module.css';
 
-export default function Transactions({ bundles }) {
+export default function Bundles({ bundles }) {
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
 
@@ -72,7 +73,7 @@ function Bundle({ index, bundle, setBundleAndOpen }) {
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">
-      <a href="#" onClick={ (e) => setBundleAndOpen(e, bundle) }> { OpenBookIcon }</a>
+      <a className={styles['book-icon']} href="#" onClick={ (e) => setBundleAndOpen(e, bundle) }> { OpenBookIcon }</a>
     </td>
   </tr>;
 }

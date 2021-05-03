@@ -1,11 +1,28 @@
-.container {
-  min-height: 100vh;
-  padding: 0 0.5rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+
+.header {
+  @apply text-5xl m-14 text-center font-semibold;
+}
+
+.gradient {
+  color: transparent;
+  background: linear-gradient(-60deg, #e44e4e, #fa5549, #ffd035, #fa9049, #ff5151);
+  background-size: 200% 200%;
+  animation: Gradient 8s ease infinite;
+  -moz-animation: Gradient 8s ease infinite;
+  -webkit-animation: Gradient 8s ease infinite;
+  -webkit-background-clip: text;
+}
+
+@-webkit-keyframes Gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 .footer {
@@ -18,10 +35,13 @@
 }
 
 .footer a {
-  display: flex;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
+}
+
+.footer a:hover {
+  text-decoration: underline;
 }
 
 .title a {
