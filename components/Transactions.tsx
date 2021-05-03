@@ -36,8 +36,8 @@ export default function Transactions({ bundles }) {
 };
 
 function sortBlocks(a, b): number {
-  if (a.block_number > b.block_number) return 1;
-  if (a.block_number < b.block_number) return -1;
+  if (a.block_number < b.block_number) return 1;
+  if (a.block_number > b.block_number) return -1;
   return 0;
 }
 
