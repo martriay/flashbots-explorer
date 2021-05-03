@@ -1,5 +1,7 @@
 # ⚡ Flashbots Explorer 🔍
 
+Deployed at http://flashbots-explorer.netlify.app/
+
 ## Development
 This is a create next app project so:
 
