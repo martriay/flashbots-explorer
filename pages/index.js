@@ -11,10 +11,11 @@ export default function Home({ blocks }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <h3 className="text-4xl m-7 text-center"> ⚡ Flashbots Explorer 🔍</h3>
       <Transactions bundles={ blocks } />
 
       <footer className={styles.footer}>
-        <a href="http://marto.lol" target="_blank" rel="noopener noreferrer"> Powered by Marto ⚡</a>
+        <a href="http://marto.lol" target="_blank" rel="noopener noreferrer"> Arranged by Marto ⚡</a>
       </footer>
     </div>
   )

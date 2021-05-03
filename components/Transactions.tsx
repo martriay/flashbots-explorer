@@ -12,7 +12,6 @@ export default function Transactions({ bundles }) {
 
   console.log(bundles);
   return <div className="w-10/12 self-center">
-    <h3>Flashbots Explorer</h3>
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
