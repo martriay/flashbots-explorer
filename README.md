@@ -1,4 +1,4 @@
-# Flashbots explorer
+# ⚡ Flashbots Explorer 🔍
 
 ## Development
 This is a create react app project so:
