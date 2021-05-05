@@ -16,10 +16,10 @@ export default function Home({ blocks }) {
       </Head>
       <a className="github-fork-ribbon" href="https://github.com/martriay/flashbots-explorer" data-ribbon="Contribute in GitHub" title="Contribute in GitHub">Contribute in GitHub</a>
 
-      <h3 className="text-5xl m-14 text-center font-semibold">
-        <span className="hidden sm:inline"> ⚡ </span>
+      <h3 className={styles.header}>
+        <span className={styles.emoji}> ⚡ </span>
         <span className={styles.gradient}>Flashbots Bundle Explorer</span>
-        <span className="hidden sm:inline"> 🔍</span>
+        <span className={styles.emoji}> 🔍</span>
       </h3>
       <Bundles bundles={ blocks } />
 

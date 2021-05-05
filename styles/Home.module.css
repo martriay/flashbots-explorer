@@ -1,3 +1,11 @@
+.header {
+  @apply text-5xl m-14 text-center font-semibold;
+}
+
+.emoji {
+  @apply hidden sm:inline;
+}
+
 .gradient {
   color: transparent;
   background: linear-gradient(-60deg, #e44e4e, #fa5549, #ffd035, #fa9049, #ff5151);
