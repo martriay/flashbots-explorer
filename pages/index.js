@@ -1,10 +1,13 @@
 import Head from 'next/head';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
+import * as ga from '../lib/ga';
+import { useEffect } from 'react';
 
 export default function Home({ blocks }) {
+  useEffect(ga.pageview);
   return (
-    <div className='App container flex flex-col'>
+    <div className='App flex flex-col'>
       <Head>
         <title> 🤖 Flashbots Explorer ⚡ </title>
         <meta name="description" content="Explore Flashbots bundles" />
