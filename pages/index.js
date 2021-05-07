@@ -24,7 +24,7 @@ export default function Home({ blocks }) {
       <Bundles bundles={ blocks } />
 
       <footer className={styles.footer}>
-        <span>brewed with ⚡  by <a href="http://marto.lol" target="_blank" rel="noopener noreferrer">marto.lol</a></span>
+        <span>brewed with ⚡  by <a href="https://marto.lol" target="_blank" rel="noopener noreferrer">marto.lol</a></span>
       </footer>
     </div>
   )
