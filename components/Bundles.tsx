@@ -1,16 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
 
 export default function Bundles({ bundles }) {
+  const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
 
-  const setBundleAndOpen = (e, bundle) => {
-    e.preventDefault();
+  const setBundleAndOpen = bundle => {
+    router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
     setBundle(bundle);
     setOpenModal(true);
   };
+
+  useEffect(() => {
+    if (router.query.block) {
+      const bundle = bundles.find(b => b.block_number == router.query.block);
+      setBundleAndOpen(bundle);
+    }
+  }, [router.query.block])
 
   return <div className="w-10/12 self-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
@@ -52,6 +61,11 @@ const OpenBookIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6"
 </svg>;
 
 function Bundle({ index, bundle, setBundleAndOpen }) {
+  const onClick = e => {
+    e.preventDefault();
+    setBundleAndOpen(bundle);
+  };
+
   return <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
     <td className="block-number px-6 py-4 whitespace-nowrap text-center">
       <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
@@ -73,7 +87,7 @@ function Bundle({ index, bundle, setBundleAndOpen }) {
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">
-      <a className={styles['book-icon']} href="#" onClick={ (e) => setBundleAndOpen(e, bundle) }> { OpenBookIcon }</a>
+      <a className={styles['book-icon']} href="#" onClick={ onClick }> { OpenBookIcon }</a>
     </td>
   </tr>;
 }

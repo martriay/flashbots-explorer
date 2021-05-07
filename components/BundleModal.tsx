@@ -2,7 +2,7 @@
 import { Fragment, useRef } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 
-export default function Example({ open, bundle, setOpen }) {
+export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
 
   return (
@@ -47,7 +47,7 @@ export default function Example({ open, bundle, setOpen }) {
                   <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
                     <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
                       Bundle in #
-                      <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
+                      <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle?.block_number }`}>
                         { bundle?.block_number }
                       </a>
                     </Dialog.Title>
