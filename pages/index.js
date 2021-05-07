@@ -9,7 +9,7 @@ export default function Home({ blocks }) {
   return (
     <div className='App flex flex-col'>
       <Head>
-        <title> 🤖 Flashbots Explorer ⚡ </title>
+        <title> 🤖 Flashbots Bundle Explorer ⚡ </title>
         <meta name="description" content="Explore Flashbots bundles" />
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
