@@ -18,8 +18,8 @@ export default function Home({ blocks }) {
 
       <h3 className={styles.header}>
         <span className={styles.emoji}> ⚡ </span>
-        <span className={styles.gradient}>Flashbots Bundle Explorer</span>
-        <span className={styles.emoji}> 🔍</span>
+        <span className={styles.gradient}>Flashbots Bundle Explorer </span>
+        <span className={styles.emoji}>🤖</span>
       </h3>
       <Bundles bundles={ blocks } />
 

@@ -7,6 +7,7 @@ export default function Bundles({ bundles }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
+  const [searchValue, setSearch] = useState(undefined);
 
   const setBundleAndOpen = bundle => {
     router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
@@ -16,13 +17,26 @@ export default function Bundles({ bundles }) {
 
   useEffect(() => {
     if (router.query.block) {
-      const bundle = bundles.find(b => b.block_number == router.query.block);
-      setBundleAndOpen(bundle);
+      findBundleAndOpen(router.query.block as unknown as number);
     }
-  }, [router.query.block])
+  }, [router.query.block]);
 
-  return <div className="w-10/12 self-center">
+  const findBundleAndOpen = (blockNumber: number) => {
+    const local = bundles.find(b => b.block_number == blockNumber);
+    if (local) {
+      setBundleAndOpen(local);
+    } else {
+      console.log(`will fetch ${blockNumber}`);
+    }
+  };
+
+  return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
+    <div className={styles.search}>
+      <span className="hidden sm:inline">Search by block number</span>
+      <input onChange={ e => setSearch(e.target.value) } type="number" />
+      <button onClick={ () => findBundleAndOpen(searchValue) }> 🔍</button>
+    </div>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
