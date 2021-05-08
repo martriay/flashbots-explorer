@@ -9,6 +9,12 @@ export default function Bundles({ bundles }) {
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
 
+  useEffect(() => {
+    if (router.query.block) {
+      findBundleAndOpen(router.query.block as unknown as number);
+    }
+  }, [router.query.block]);
+
   const setBundleAndOpen = bundle => {
     if (bundle !== undefined) {
       router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
@@ -16,18 +22,6 @@ export default function Bundles({ bundles }) {
     setBundle(bundle);
     setOpenModal(true);
   };
-
-  const keyPress = e => {
-    if (e.keyCode == 13) {
-      findBundleAndOpen(searchValue);
-    }
-  };
-
-  useEffect(() => {
-    if (router.query.block) {
-      findBundleAndOpen(router.query.block as unknown as number);
-    }
-  }, [router.query.block]);
 
   const findBundleAndOpen = async (blockNumber: number) => {
     const local = bundles.find(b => b.block_number == blockNumber);
@@ -46,13 +40,18 @@ export default function Bundles({ bundles }) {
     }
   };
 
+  const submit = e => {
+    e.preventDefault();
+    findBundleAndOpen(searchValue);
+  };
+
   return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
-    <div className={styles.search}>
+    <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>
-      <input onChange={ e => setSearch(e.target.value) } onKeyDown={ keyPress } type="number" />
-      <button onClick={ () => findBundleAndOpen(searchValue) }> 🔍</button>
-    </div>
+      <input type="number" onChange={ e => setSearch(e.target.value) } />
+      <button type="submit"> 🔍</button>
+    </form>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
