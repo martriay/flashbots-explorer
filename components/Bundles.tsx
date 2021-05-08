@@ -26,9 +26,11 @@ export default function Bundles({ bundles }) {
     if (local) {
       setBundleAndOpen(local);
     } else {
-      console.log(`will fetch ${blockNumber}`);
       const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
-      console.log(res);
+      const { blocks } = await res.json();
+      if (blocks) {
+        setBundleAndOpen(blocks[0]);
+      }
     }
   };
 
