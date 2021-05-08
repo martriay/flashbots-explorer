@@ -21,12 +21,14 @@ export default function Bundles({ bundles }) {
     }
   }, [router.query.block]);
 
-  const findBundleAndOpen = (blockNumber: number) => {
+  const findBundleAndOpen = async (blockNumber: number) => {
     const local = bundles.find(b => b.block_number == blockNumber);
     if (local) {
       setBundleAndOpen(local);
     } else {
       console.log(`will fetch ${blockNumber}`);
+      const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
+      console.log(res);
     }
   };
 
