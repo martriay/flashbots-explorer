@@ -7,22 +7,52 @@ export default function Bundles({ bundles }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
+  const [searchValue, setSearch] = useState(undefined);
 
   const setBundleAndOpen = bundle => {
-    router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
+    if (bundle !== undefined) {
+      router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
+    }
     setBundle(bundle);
     setOpenModal(true);
   };
 
+  const keyPress = e => {
+    if (e.keyCode == 13) {
+      findBundleAndOpen(searchValue);
+    }
+  };
+
   useEffect(() => {
     if (router.query.block) {
-      const bundle = bundles.find(b => b.block_number == router.query.block);
-      setBundleAndOpen(bundle);
+      findBundleAndOpen(router.query.block as unknown as number);
     }
-  }, [router.query.block])
+  }, [router.query.block]);
 
-  return <div className="w-10/12 self-center">
+  const findBundleAndOpen = async (blockNumber: number) => {
+    const local = bundles.find(b => b.block_number == blockNumber);
+    if (local) {
+      setBundleAndOpen(local);
+    } else {
+      try {
+        const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
+        const { blocks } = await res.json();
+        if (blocks) {
+          setBundleAndOpen(blocks[0]);
+        }
+      } catch (e) {
+        setBundleAndOpen(undefined);
+      }
+    }
+  };
+
+  return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
+    <div className={styles.search}>
+      <span className="hidden sm:inline">Search by block number</span>
+      <input onChange={ e => setSearch(e.target.value) } onKeyDown={ keyPress } type="number" />
+      <button onClick={ () => findBundleAndOpen(searchValue) }> 🔍</button>
+    </div>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
