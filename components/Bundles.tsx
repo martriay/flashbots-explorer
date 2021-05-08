@@ -15,6 +15,12 @@ export default function Bundles({ bundles }) {
     setOpenModal(true);
   };
 
+  const keyPress = e => {
+    if (e.keyCode == 13) {
+      findBundleAndOpen(searchValue);
+    }
+  };
+
   useEffect(() => {
     if (router.query.block) {
       findBundleAndOpen(router.query.block as unknown as number);
@@ -38,7 +44,7 @@ export default function Bundles({ bundles }) {
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <div className={styles.search}>
       <span className="hidden sm:inline">Search by block number</span>
-      <input onChange={ e => setSearch(e.target.value) } type="number" />
+      <input onChange={ e => setSearch(e.target.value) } onKeyDown={ keyPress } type="number" />
       <button onClick={ () => findBundleAndOpen(searchValue) }> 🔍</button>
     </div>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
