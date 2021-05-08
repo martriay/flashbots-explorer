@@ -1,8 +1,9 @@
 import Head from 'next/head';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
 import * as ga from '../lib/ga';
-import { useEffect } from 'react';
 
 export default function Home({ blocks }) {
   useEffect(ga.pageview);
