@@ -49,7 +49,7 @@ export default function Bundles({ bundles }) {
   return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <div className={styles.search}>
-      <span className="hidden sm:inline">Search by block number</span>
+      <span>Search by block number</span>
       <input onChange={ e => setSearch(e.target.value) } onKeyDown={ keyPress } type="number" />
       <button onClick={ () => findBundleAndOpen(searchValue) }> 🔍</button>
     </div>

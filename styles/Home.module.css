@@ -8,6 +8,10 @@
   border-radius: 2rem;
 }
 
+.search span {
+  @apply hidden sm:inline;
+}
+
 .search input {
   margin: 0 0 0 1rem;
   padding: .5rem;
