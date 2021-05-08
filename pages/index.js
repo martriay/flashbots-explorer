@@ -6,6 +6,20 @@ import { useEffect } from 'react';
 
 export default function Home({ blocks }) {
   useEffect(ga.pageview);
+
+  const router = useRouter()
+
+  useEffect(() => {
+    const handleRouteChange = (url) => {
+      ga.pageview(url)
+    }
+    router.events.on('routeChangeComplete', handleRouteChange);
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    }
+  }, [router.events]);
+
   return (
     <div className='App flex flex-col'>
       <Head>
