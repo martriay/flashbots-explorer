@@ -41,41 +41,14 @@ export default function BundleModal({ open, bundle, setOpen }) {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:w-min">
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle">
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start justify-center">
-                  <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
-                    <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
-                      Bundle in #
-                      <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle?.block_number }`}>
-                        { bundle?.block_number }
-                      </a>
-                    </Dialog.Title>
-
-                    <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                      <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                        <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                          <table className="min-w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-200">
-                              <tr>
-                                <th scope="col" className='table-heading text-center'>Hash</th>
-                                <th scope="col" className='table-heading text-center'>From</th>
-                                <th scope="col" className='table-heading text-center'>To</th>
-                                <th scope="col" className='table-heading text-center'>Gas used</th>
-                                <th scope="col" className='table-heading text-center'>Gas price</th>
-                                <th scope="col" className='table-heading text-center'>Coinbase transfer</th>
-                                <th scope="col" className='table-heading text-center'>Total miner reward</th>
-                              </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                              { bundle?.transactions.map(BundleTransaction) }
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
+                  {
+                    bundle
+                    ? <Bundle bundle={ bundle } />
+                    : <Error />
+                  }
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
@@ -95,6 +68,38 @@ export default function BundleModal({ open, bundle, setOpen }) {
     </Transition>
   )
 }
+
+const Bundle = ({ bundle }) => <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
+  <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
+    Bundle in #
+    <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle?.block_number }`}>
+      { bundle?.block_number }
+    </a>
+  </Dialog.Title>
+
+  <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+    <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+      <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-200">
+            <tr>
+              <th scope="col" className='table-heading text-center'>Hash</th>
+              <th scope="col" className='table-heading text-center'>From</th>
+              <th scope="col" className='table-heading text-center'>To</th>
+              <th scope="col" className='table-heading text-center'>Gas used</th>
+              <th scope="col" className='table-heading text-center'>Gas price</th>
+              <th scope="col" className='table-heading text-center'>Coinbase transfer</th>
+              <th scope="col" className='table-heading text-center'>Total miner reward</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            { bundle?.transactions.map(BundleTransaction) }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>;
 
 const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -145,6 +150,13 @@ function BundleTransaction(transaction, index: number) {
     </td>
   </tr>;
 }
+
+const Error = () => <div>
+  <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
+    Oops
+  </Dialog.Title>
+  <div className="">Bundle not found, have this instead:  🍌</div>
+</div>;
 
 function Address({ address } : { address: string}) {
   const size = 6;

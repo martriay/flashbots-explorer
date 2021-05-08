@@ -10,7 +10,9 @@ export default function Bundles({ bundles }) {
   const [searchValue, setSearch] = useState(undefined);
 
   const setBundleAndOpen = bundle => {
-    router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
+    if (bundle !== undefined) {
+      router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
+    }
     setBundle(bundle);
     setOpenModal(true);
   };
@@ -32,10 +34,14 @@ export default function Bundles({ bundles }) {
     if (local) {
       setBundleAndOpen(local);
     } else {
-      const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
-      const { blocks } = await res.json();
-      if (blocks) {
-        setBundleAndOpen(blocks[0]);
+      try {
+        const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
+        const { blocks } = await res.json();
+        if (blocks) {
+          setBundleAndOpen(blocks[0]);
+        }
+      } catch (e) {
+        setBundleAndOpen(undefined);
       }
     }
   };
