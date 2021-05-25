@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
 import * as ga from '../lib/ga';
-import { transformBundle } from '../lib/getSubBundles';
+import { transformBundle } from '../lib/transformBundle';
 
 export default function Home({ blocks }) {
   useEffect(ga.pageview);
