@@ -90,13 +90,13 @@ const Bundle = ({ bundle }) => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-200">
               <tr>
-                <th scope="col" className='table-heading text-center'>Hash</th>
-                <th scope="col" className='table-heading text-center'>From</th>
-                <th scope="col" className='table-heading text-center'>To</th>
-                <th scope="col" className='table-heading text-center'>Gas used</th>
-                <th scope="col" className='table-heading text-center'>Gas price</th>
-                <th scope="col" className='table-heading text-center'>Coinbase transfer</th>
-                <th scope="col" className='table-heading text-center'>Total miner reward</th>
+                <th scope="col" className='table-heading text-center px-3'>Hash</th>
+                <th scope="col" className='table-heading text-center px-3'>From</th>
+                <th scope="col" className='table-heading text-center px-3'>To</th>
+                <th scope="col" className='table-heading text-center px-3'>Gas used</th>
+                <th scope="col" className='table-heading text-center px-3'>Gas price</th>
+                <th scope="col" className='table-heading text-center px-3'>Coinbase transfer</th>
+                <th scope="col" className='table-heading text-center px-3'>Miner reward</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -112,10 +112,7 @@ const Bundle = ({ bundle }) => {
                   { bundle.transactions.reduce((acc, b) => acc + b.length, 0) } transactions
                 </td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
-                  { bundle.transactions.reduce((acc, txs) => {
-                      console.log(txs);
-                      return acc + txs.reduce((ac2, tx) => ac2 + tx.gas_used, 0)
-                    }, 0)
+                  { bundle.transactions.reduce((acc, txs) => acc + txs.reduce((ac2, tx) => ac2 + tx.gas_used, 0), 0)
                   }
                 </td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
@@ -137,7 +134,6 @@ const Bundle = ({ bundle }) => {
 }
 
 function SubBundle({ subBundle, index }) {
-  console.log(subBundle)
   return <>
     { subBundle.map(BundleTransaction) }
     <tr className="text-left bg-gray-100">
