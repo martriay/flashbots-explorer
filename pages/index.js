@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
 import * as ga from '../lib/ga';
+import { transformBundle } from '../lib/getSubBundles';
 
 export default function Home({ blocks }) {
   useEffect(ga.pageview);
@@ -50,7 +51,7 @@ export async function getServerSideProps() {
   const { blocks } = await res.json();
   return {
     props: {
-      blocks
+      blocks: blocks.map(b => transformBundle(b))
     },
   }
 }

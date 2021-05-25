@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
+import { transformBundle } from '../lib/getSubBundles';
 
 export default function Bundles({ bundles }) {
   const router = useRouter();
@@ -32,9 +33,9 @@ export default function Bundles({ bundles }) {
         const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
         const { blocks } = await res.json();
         if (blocks) {
-          setBundleAndOpen(blocks[0]);
+          setBundleAndOpen(transformBundle(blocks[0]));
         }
-      } catch (e) {
+    } catch (e) {
         setBundleAndOpen(undefined);
       }
     }
@@ -62,7 +63,8 @@ export default function Bundles({ bundles }) {
                 <th scope="col" className='table-heading'>Miner reward</th>
                 <th scope="col" className='table-heading'>Gas used</th>
                 <th scope="col" className='table-heading'>Effective gas price</th>
-                <th scope="col" className='table-heading'>Inspect bundle</th>
+                <th scope="col" className='table-heading'>Bundles</th>
+                <th scope="col" className='table-heading'>Inspect</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -113,6 +115,11 @@ function Bundle({ index, bundle, setBundleAndOpen }) {
     <td className="px-6 py-4 whitespace-nowrap text-center">
       <div className="text-sm text-gray-900">
         { Math.round(bundle?.miner_reward / bundle?.gas_used / (10 ** 9)) } gwei
+      </div>
+    </td>
+    <td className="px-6 py-4 whitespace-nowrap text-center">
+      <div className="text-sm text-gray-900">
+        { bundle.transactions.length }
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">

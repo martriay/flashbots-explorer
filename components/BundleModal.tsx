@@ -76,16 +76,6 @@ export default function BundleModal({ open, bundle, setOpen }) {
 }
 
 const Bundle = ({ bundle }) => {
-  const subBundles = bundle?.transactions.reduce((acc, curr) => {
-    if (acc[curr.bundle_index]) {
-      acc[curr.bundle_index].push(curr);
-    } else {
-      acc[curr.bundle_index] = [curr];
-    }
-    return acc;
-  }, []);
-  console.log(subBundles)
-
   return <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
     <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
       Bundles in #
@@ -98,7 +88,47 @@ const Bundle = ({ bundle }) => {
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
         <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
           <table className="min-w-full divide-y divide-gray-200">
-            { subBundles?.map(SubBundle) }
+            <thead className="bg-gray-200">
+              <tr>
+                <th scope="col" className='table-heading text-center'>Hash</th>
+                <th scope="col" className='table-heading text-center'>From</th>
+                <th scope="col" className='table-heading text-center'>To</th>
+                <th scope="col" className='table-heading text-center'>Gas used</th>
+                <th scope="col" className='table-heading text-center'>Gas price</th>
+                <th scope="col" className='table-heading text-center'>Coinbase transfer</th>
+                <th scope="col" className='table-heading text-center'>Total miner reward</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              { bundle.transactions.map((sb, i) => <SubBundle key={ i } index={ i } subBundle={ sb } />) }
+
+              <tr className="text-left bg-gray-200">
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  { bundle.transactions.length } bundles
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  { bundle.transactions.reduce((acc, b) => acc + b.length, 0) } transactions
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  { bundle.transactions.reduce((acc, txs) => {
+                      console.log(txs);
+                      return acc + txs.reduce((ac2, tx) => ac2 + tx.gas_used, 0)
+                    }, 0)
+                  }
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  { Math.round(bundle.miner_reward / bundle.gas_used / (10 ** 9)) } gwei
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'coinbase_transfer')), 0) }
+                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
+                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'total_miner_reward')), 0) }
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -106,24 +136,30 @@ const Bundle = ({ bundle }) => {
   </div>;
 }
 
-function SubBundle(subBundle) {
+function SubBundle({ subBundle, index }) {
+  console.log(subBundle)
   return <>
-    <thead className="bg-gray-200">
-      <tr>
-        <th scope="col" className='table-heading text-center'>Hash</th>
-        <th scope="col" className='table-heading text-center'>From</th>
-        <th scope="col" className='table-heading text-center'>To</th>
-        <th scope="col" className='table-heading text-center'>Gas used</th>
-        <th scope="col" className='table-heading text-center'>Gas price</th>
-        <th scope="col" className='table-heading text-center'>Coinbase transfer</th>
-        <th scope="col" className='table-heading text-center'>Total miner reward</th>
-      </tr>
-    </thead>
-    <tbody className="bg-white divide-y divide-gray-200">
-      { subBundle.map(BundleTransaction) }
-    </tbody>
+    { subBundle.map(BundleTransaction) }
+    <tr className="text-left bg-gray-100">
+      <td className="pl-4" colSpan={ 3 }>
+        #{ index + 1 }
+      </td>
+      <td className="px-6 whitespace-nowrap text-center text-sm">
+        { Math.round(subBundle.reduce((acc, tx) => acc + tx.gas_used, 0)) }
+      </td>
+      <td className="px-6 whitespace-nowrap text-center text-sm">
+      </td>
+      <td className="px-6 whitespace-nowrap text-center text-sm">
+        Ξ { summarizeFp(subBundle, 'coinbase_transfer') }
+      </td>
+      <td className="px-6 whitespace-nowrap text-center text-sm">
+        Ξ { summarizeFp(subBundle, 'total_miner_reward') }
+      </td>
+    </tr>
   </>;
 }
+
+const summarizeFp = (x, c): number => (x.reduce((acc, tx) => acc + tx[c] / 10 ** 18, 0)).toFixed(4);
 
 const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
