@@ -100,7 +100,11 @@ const Bundle = ({ bundle }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { bundle.transactions.map((sb, i) => <SubBundle key={ i } index={ i } subBundle={ sb } />) }
+              {
+                bundle.transactions.length > 1
+                ? bundle.transactions.map((sb, i) => <SubBundle key={ i } index={ i } subBundle={ sb } />)
+                : <SubBundle subBundle={ bundle.transactions[0] } />
+              }
 
               <tr className="text-left bg-gray-200">
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
@@ -133,25 +137,29 @@ const Bundle = ({ bundle }) => {
   </div>;
 }
 
-function SubBundle({ subBundle, index }) {
+function SubBundle({ subBundle, index } : { subBundle: any[], index?: number }) {
   return <>
     { subBundle.map(BundleTransaction) }
-    <tr className="text-left bg-gray-100">
-      <td className="pl-4" colSpan={ 3 }>
-        #{ index + 1 }
-      </td>
-      <td className="px-6 whitespace-nowrap text-center text-sm">
-        { Math.round(subBundle.reduce((acc, tx) => acc + tx.gas_used, 0)) }
-      </td>
-      <td className="px-6 whitespace-nowrap text-center text-sm">
-      </td>
-      <td className="px-6 whitespace-nowrap text-center text-sm">
-        Ξ { summarizeFp(subBundle, 'coinbase_transfer') }
-      </td>
-      <td className="px-6 whitespace-nowrap text-center text-sm">
-        Ξ { summarizeFp(subBundle, 'total_miner_reward') }
-      </td>
-    </tr>
+    {
+      index === undefined
+      ? <></>
+      : <tr className="text-left bg-gray-100">
+          <td className="pl-4" colSpan={ 3 }>
+            #{ index + 1 }
+          </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm">
+            { Math.round(subBundle.reduce((acc, tx) => acc + tx.gas_used, 0)) }
+          </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm">
+          </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm">
+            Ξ { summarizeFp(subBundle, 'coinbase_transfer') }
+          </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm">
+            Ξ { summarizeFp(subBundle, 'total_miner_reward') }
+          </td>
+        </tr>
+    }
   </>;
 }
 
