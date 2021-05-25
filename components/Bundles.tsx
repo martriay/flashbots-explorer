@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
-import { transformBundle } from '../lib/getSubBundles';
+import { transformBundle } from '../lib/transformBundle';
 
 export default function Bundles({ bundles }) {
   const router = useRouter();
