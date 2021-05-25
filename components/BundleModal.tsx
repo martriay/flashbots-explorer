@@ -122,10 +122,10 @@ const Bundle = ({ bundle }) => {
                   { Math.round(bundle.miner_reward / bundle.gas_used / (10 ** 9)) } gwei
                 </td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
-                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'coinbase_transfer')), 0) }
+                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'coinbase_transfer')), 0).toFixed(4) }
                 </td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
-                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'total_miner_reward')), 0) }
+                  Ξ { bundle.transactions.reduce((acc, txs) => acc + Number(summarizeFp(txs, 'total_miner_reward')), 0).toFixed(4) }
                 </td>
               </tr>
             </tbody>
