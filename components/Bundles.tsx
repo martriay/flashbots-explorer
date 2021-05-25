@@ -66,7 +66,7 @@ export default function Bundles({ bundles }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { bundles?.sort(sortBlocks).map((b, i) => <Bundle index={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
+              { bundles?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
             </tbody>
           </table>
         </div>
@@ -95,7 +95,7 @@ function Bundle({ index, bundle, setBundleAndOpen }) {
     setBundleAndOpen(bundle);
   };
 
-  return <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
+  return <tr className={ index % 2 ? 'bg-gray-50' : '' }>
     <td className="block-number px-6 py-4 whitespace-nowrap text-center">
       <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
         { ExternalLinkIcon }
