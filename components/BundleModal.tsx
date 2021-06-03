@@ -1,7 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
+import { getAllLogs } from '../lib/ABILogs';
 
 export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
@@ -179,40 +180,43 @@ function BundleTransaction(transaction, index: number) {
   // total_miner_reward: "9785908415014455"
   // transaction_hash: "0xedbaa982717813b69e215fe08525ae85c3686a095a1b908714ef8755f58e754d"
   // tx_index: 0
-  return <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
-    <td className="block-number px-6 py-4 whitespace-nowrap text-center">
-      <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
-        { ExternalLinkIcon }
-        <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
-      </a>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <Address address={ transaction?.eoa_address } />
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <Address address={ transaction?.to_address } />
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-        { Math.round(transaction?.gas_used) }
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-        { Math.round(transaction?.gas_price / (10 ** 9)) } gwei
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-      Ξ { (transaction?.coinbase_transfer / (10 ** 18)).toFixed(4) }
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-      Ξ { (transaction?.total_miner_reward / (10 ** 18)).toFixed(4) }
-      </div>
-    </td>
-  </tr>;
+  return <Fragment key={"f_" + index}>
+    <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
+      <td className="block-number px-6 py-4 whitespace-nowrap text-center">
+        <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
+          { ExternalLinkIcon }
+          <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
+        </a>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <Address address={ transaction?.eoa_address } />
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <Address address={ transaction?.to_address } />
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+          { Math.round(transaction?.gas_used) }
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+          { Math.round(transaction?.gas_price / (10 ** 9)) } gwei
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+        Ξ { (transaction?.coinbase_transfer / (10 ** 18)).toFixed(4) }
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+        Ξ { (transaction?.total_miner_reward / (10 ** 18)).toFixed(4) }
+        </div>
+      </td>
+    </tr>
+    <Receipts transaction={transaction} index={index} />
+  </Fragment>;
 }
 
 const Error = () => <div>
@@ -229,3 +233,81 @@ function Address({ address } : { address: string}) {
     <div className="text-sm text-gray-900">{ shorten(address) } </div>
   </a>;
 }
+
+const Receipts = ({transaction, index}) => {
+
+  const [logs, setLogs] = useState(false);
+  useEffect(async () => {
+    let l = await getReceipts(transaction);
+    setLogs(l);
+  }, [transaction]);
+
+  return <>
+    { logs && 
+      <tr key={ "r_" + index } className={ index % 2 ? 'bg-gray-50' : '' }>
+        {/*
+        <td className="block-number px-6 py-4 whitespace-nowrap text-left" colSpan={ 2 }>
+          <b>Dexes</b> : 
+        </td>
+        */}
+        <td className="block-number px-6 py-4 whitespace-nowrap text-left" colSpan={ 7 }>
+          <b>Coins</b> : 
+          { 
+            logs.map(l => {
+              return (
+                l.logo 
+                ? 
+                <a key={ "a_" + index + now() } className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ l.address }`} style={{ margin: 3}}>
+                  {l.coin} <img key={ "i_" + index + now() } src={l.logo} style={{ width:"25px", height:"25px", display:"inline-block",}}/>
+                </a>
+                :
+                <a key={ "a_" + index + now() } className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ l.address }`} style={{ margin: 3}}>
+                  {l.coin} 
+                </a>
+              )
+            })
+          }
+        </td>
+      </tr>
+    }
+  </>;
+}
+const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
+const mainnetInfura = "https://mainnet.infura.io/v3/" + INFURA_ID;
+const getReceipts = async (transaction) =>{
+
+  let jsonrpc = {
+    "jsonrpc":"2.0",
+    "method": "eth_getTransactionReceipt",
+    "params": [],
+    "id":1
+  }
+  let params = {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: ""
+  }
+  let l;
+  let { transaction_hash } = transaction
+  jsonrpc.params = [transaction_hash];
+  params.body  = JSON.stringify(jsonrpc);
+  try{
+    let res = await fetch(mainnetInfura, params);
+    let { result : { logs } } = await res.json();
+    l = getAllLogs(logs);
+  } catch(e){
+    console.log(e);
+  }
+  return l;
+}
+
+const now = () => {
+  return randomMaxMin(Date.now(), Date.now()*10000);
+};
+
+const randomMaxMin = (max, min) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
