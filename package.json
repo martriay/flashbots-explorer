@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 8081",
+    "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 8081"
+    "start": "next start"
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",
