@@ -236,10 +236,13 @@ function Address({ address } : { address: string}) {
 
 const Receipts = ({transaction, index}) => {
 
-  const [logs, setLogs] = useState(false);
-  useEffect(async () => {
-    let l = await getReceipts(transaction);
-    setLogs(l);
+  const [logs, setLogs] = useState([]);
+  useEffect( () => {
+    const getLogs = async () => {
+      let l = await getReceipts(transaction);
+      setLogs(l);
+    }
+    getLogs();
   }, [transaction]);
 
   return <>
