@@ -85,6 +85,14 @@
   text-decoration: underline;
 }
 
+.tipjar {
+  @apply flex text-xs items-center;
+}
+
+.tipjarAddress {
+  @apply mx-1 px-1 border-solid border rounded border-pink-500 text-pink-500;
+}
+
 .title a {
   color: #0070f3;
   text-decoration: none;
