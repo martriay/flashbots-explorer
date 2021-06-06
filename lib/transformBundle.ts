@@ -1,5 +1,4 @@
 export function getSubBundles(bundle) { 
-  console.log(bundle)
   return bundle.transactions.reduce((acc, curr) => {
     if (acc[curr.bundle_index]) {
       acc[curr.bundle_index].push(curr);

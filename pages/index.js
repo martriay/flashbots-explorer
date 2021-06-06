@@ -1,20 +1,37 @@
 import Head from 'next/head';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
 import * as ga from '../lib/ga';
 import { transformBundle } from '../lib/transformBundle';
+import { API_URL } from '../lib/constants';
 
-export default function Home({ blocks }) {
+export default function Home({ initialBlocks }) {
   useEffect(ga.pageview);
+  const [blocks, setBlocks] = useState(initialBlocks);
 
-  const router = useRouter()
+  const router = useRouter();
+
+  useEffect(() => {
+    const { from } = router.query;
+
+    const fetchFrom = async () => {
+      const res = await fetch(`${API_URL}?from=${from}`);
+      const { blocks } = await res.json();
+      setBlocks(blocks);
+    };
+
+    if (from) {
+      fetchFrom();
+    }
+  }, [router.query.from]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      ga.pageview(url)
-    }
+      ga.pageview(url);
+    };
+
     router.events.on('routeChangeComplete', handleRouteChange);
 
     return () => {
@@ -47,11 +64,11 @@ export default function Home({ blocks }) {
 }
 
 export async function getServerSideProps() {
-  const res = await fetch('https://blocks.flashbots.net/v1/blocks');
+  const res = await fetch(API_URL);
   const { blocks } = await res.json();
   return {
     props: {
-      blocks: blocks.map(b => transformBundle(b))
+      initialBlocks: blocks.map(b => transformBundle(b))
     },
   }
 }

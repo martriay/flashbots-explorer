@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
 import { transformBundle } from '../lib/transformBundle';
+import { API_URL } from '../lib/constants';
 
 export default function Bundles({ bundles }) {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function Bundles({ bundles }) {
       setBundleAndOpen(local);
     } else {
       try {
-        const res = await fetch(`https://blocks.flashbots.net/v1/blocks?block_number=${blockNumber}`);
+        const res = await fetch(`${API_URL}?block_number=${blockNumber}`);
         const { blocks } = await res.json();
         if (blocks) {
           setBundleAndOpen(transformBundle(blocks[0]));
