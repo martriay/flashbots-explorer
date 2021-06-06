@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
 
@@ -10,6 +10,13 @@ export default function BundleModal({ open, bundle, setOpen }) {
     router.back();
     setOpen(false);
   };
+
+  useEffect(() => {
+    const { block } = router.query;
+    if (block === undefined) {
+      setOpen(false);
+    }
+  }, [router.query.block]);
 
   return (
     <Transition show={open} as={Fragment}>
@@ -170,6 +177,12 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
 </svg>;
 
 function BundleTransaction(transaction, index: number) {
+  const router = useRouter();
+  const onClick = (e, from) => {
+    e.preventDefault();
+    router.push(`/?from=${from}`, undefined, { shallow: true });
+  };
+
   // block_number: 12358944
   // coinbase_transfer: "9785908415014455"
   // eoa_address: "0x07A962Ea36DdddA0c6e594F8A29b89aC06EC8FB7"
@@ -186,7 +199,8 @@ function BundleTransaction(transaction, index: number) {
         <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
       </a>
     </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
+    <td className="flex px-6 py-4 whitespace-nowrap text-center items-center">
+      <a href={`/?from=${transaction?.eoa_address}`} onClick={ e => onClick(e, transaction?.eoa_address) } className="mr-1">🔎</a>
       <Address address={ transaction?.eoa_address } />
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
