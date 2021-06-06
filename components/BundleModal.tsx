@@ -200,7 +200,10 @@ function BundleTransaction(transaction, index: number) {
       </a>
     </td>
     <td className="flex px-6 py-4 whitespace-nowrap text-center items-center">
-      <a href={`/?from=${transaction?.eoa_address}`} onClick={ e => onClick(e, transaction?.eoa_address) } className="mr-1">🔎</a>
+      <a href={`/?from=${transaction?.eoa_address}`}
+        onClick={ e => onClick(e, transaction?.eoa_address) }
+        title="Search more bundles involving this address"
+        className="mr-1">🔎</a>
       <Address address={ transaction?.eoa_address } />
     </td>
     <td className="px-6 py-4 whitespace-nowrap text-center">
