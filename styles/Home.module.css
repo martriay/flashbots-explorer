@@ -86,10 +86,10 @@
 }
 
 .tipjar {
-  @apply flex text-xs items-center;
+  @apply flex text-xs items-center mt-2;
 }
 
-.tipjarAddress {
+.tipjar-address {
   @apply mx-1 px-1 border-solid border rounded border-pink-500 text-pink-500;
 }
 
