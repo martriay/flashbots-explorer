@@ -1,7 +1,8 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useEffect } from 'react';
+import { Fragment, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
+import { getReceipts } from '../lib/getReceipts';
 
 export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
@@ -100,6 +101,7 @@ const Bundle = ({ bundle }) => {
                 <th scope="col" className='table-heading text-center px-3'>Hash</th>
                 <th scope="col" className='table-heading text-center px-3'>From</th>
                 <th scope="col" className='table-heading text-center px-3'>To</th>
+                <th scope="col" className='table-heading text-center px-3'>Assets</th>
                 <th scope="col" className='table-heading text-center px-3'>Gas used</th>
                 <th scope="col" className='table-heading text-center px-3'>Gas price</th>
                 <th scope="col" className='table-heading text-center px-3'>Coinbase transfer</th>
@@ -114,14 +116,14 @@ const Bundle = ({ bundle }) => {
               }
 
               <tr className="text-left bg-gray-200">
-                <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
-                </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold"></td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
                   { bundle.transactions.length } bundles
                 </td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
                   { bundle.transactions.reduce((acc, b) => acc + b.length, 0) } transactions
                 </td>
+                <td className="px-6 whitespace-nowrap text-center text-sm font-bold"></td>
                 <td className="px-6 whitespace-nowrap text-center text-sm font-bold">
                   { bundle.transactions.reduce((acc, txs) => acc + txs.reduce((ac2, tx) => ac2 + tx.gas_used, 0), 0)
                   }
@@ -154,11 +156,11 @@ function SubBundle({ subBundle, index } : { subBundle: any[], index?: number }) 
           <td className="pl-4" colSpan={ 3 }>
             #{ index + 1 }
           </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm"></td>
           <td className="px-6 whitespace-nowrap text-center text-sm">
             { Math.round(subBundle.reduce((acc, tx) => acc + tx.gas_used, 0)) }
           </td>
-          <td className="px-6 whitespace-nowrap text-center text-sm">
-          </td>
+          <td className="px-6 whitespace-nowrap text-center text-sm"></td>
           <td className="px-6 whitespace-nowrap text-center text-sm">
             Ξ { summarizeFp(subBundle, 'coinbase_transfer') }
           </td>
@@ -177,11 +179,31 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
 </svg>;
 
 function BundleTransaction(transaction, index: number) {
+  const [logs, setLogs] = useState([]);
+
   const router = useRouter();
   const onClick = (e, from) => {
     e.preventDefault();
     router.push(`/?from=${from}`, undefined, { shallow: true });
   };
+
+  useEffect( () => {
+    const getLogs = async () => {
+      const logs = await getReceipts(transaction);
+      setLogs(logs);
+    }
+    getLogs();
+  }, [transaction]);
+
+  const coins = logs.reduce((acc, curr) => {
+    if (acc[curr.coin.name] === undefined && curr.coin.name.length > 0) {
+      acc[curr.coin.name] = {
+        address: curr.coin.address,
+        logo: curr.coin.logo
+      }
+    }
+    return acc;
+  }, {});
 
   // block_number: 12358944
   // coinbase_transfer: "9785908415014455"
@@ -192,44 +214,60 @@ function BundleTransaction(transaction, index: number) {
   // total_miner_reward: "9785908415014455"
   // transaction_hash: "0xedbaa982717813b69e215fe08525ae85c3686a095a1b908714ef8755f58e754d"
   // tx_index: 0
-  return <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
-    <td className="block-number px-6 py-4 whitespace-nowrap text-center">
-      <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
-        { ExternalLinkIcon }
-        <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
-      </a>
-    </td>
-    <td className="flex px-6 py-4 whitespace-nowrap text-center items-center">
-      <a href={`/?from=${transaction?.eoa_address}`}
-        onClick={ e => onClick(e, transaction?.eoa_address) }
-        title="Find more bundles involving this address"
-        className="mr-1">🔎</a>
-      <Address address={ transaction?.eoa_address } />
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <Address address={ transaction?.to_address } />
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-        { Math.round(transaction?.gas_used) }
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-        { Math.round(transaction?.gas_price / (10 ** 9)) } gwei
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-      Ξ { (transaction?.coinbase_transfer / (10 ** 18)).toFixed(4) }
-      </div>
-    </td>
-    <td className="px-6 py-4 whitespace-nowrap text-center">
-      <div className="text-sm text-gray-900">
-      Ξ { (transaction?.total_miner_reward / (10 ** 18)).toFixed(4) }
-      </div>
-    </td>
-  </tr>;
+  return <Fragment key={"f_" + index}>
+    <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
+      <td className="block-number px-6 py-4 whitespace-nowrap text-center">
+        <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
+          { ExternalLinkIcon }
+          <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
+        </a>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="flex items-center">
+          <a href={`/?from=${transaction?.eoa_address}`}
+            onClick={ e => onClick(e, transaction?.eoa_address) }
+            title="Find more bundles involving this address"
+            className="mr-1">🔎</a>
+          <Address address={ transaction?.eoa_address } />
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <Address address={ transaction?.to_address } />
+      </td>
+      <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
+          {
+            Object.keys(coins).map(coin => (coins[coin].logo
+              ? <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+                <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} /> { coin }
+              </a>
+              : <a key={ "a_" + index + now() } className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+                { coin }
+              </a>
+            ))
+          }
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+          { Math.round(transaction?.gas_used) }
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+          { Math.round(transaction?.gas_price / (10 ** 9)) } gwei
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+        Ξ { (transaction?.coinbase_transfer / (10 ** 18)).toFixed(4) }
+        </div>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <div className="text-sm text-gray-900">
+        Ξ { (transaction?.total_miner_reward / (10 ** 18)).toFixed(4) }
+        </div>
+      </td>
+    </tr>
+  </Fragment>;
 }
 
 const Error = () => <div>
@@ -239,10 +277,18 @@ const Error = () => <div>
   <div className="">Bundle not found, have this instead:  🍌</div>
 </div>;
 
-function Address({ address } : { address: string}) {
+function Address({ address } : { address: string }) {
   const size = 6;
   const shorten = (address: string): string => address.slice(0, size) + '...' + address.slice(-size);
   return <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ address }`}>
     <div className="text-sm text-gray-900">{ shorten(address) } </div>
   </a>;
 }
+
+const now = () => {
+  return randomMaxMin(Date.now(), Date.now()*10000);
+};
+
+const randomMaxMin = (max, min) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};

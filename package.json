@@ -9,9 +9,12 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",
+    "abi-decoder": "^2.4.0",
+    "csvtojson": "^2.0.10",
+    "fs": "^0.0.1-security",
     "next": "10.2.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@types/react": "^17.0.4",
