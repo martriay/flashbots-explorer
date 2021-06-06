@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
-import { transformBundle } from '../lib/transformBundle';
-import { API_URL } from '../lib/constants';
+import { getBlocks } from '../lib/api';
 
 export default function Bundles({ bundles }) {
   const router = useRouter();
@@ -31,10 +30,9 @@ export default function Bundles({ bundles }) {
       setBundleAndOpen(local);
     } else {
       try {
-        const res = await fetch(`${API_URL}?block_number=${blockNumber}`);
-        const { blocks } = await res.json();
+        const blocks = await getBlocks({ blockNumber })
         if (blocks) {
-          setBundleAndOpen(transformBundle(blocks[0]));
+          setBundleAndOpen(blocks[0]);
         }
     } catch (e) {
         setBundleAndOpen(undefined);

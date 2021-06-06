@@ -4,8 +4,7 @@ import { useRouter } from 'next/router';
 import Bundles from '../components/Bundles';
 import styles from '../styles/Home.module.css';
 import * as ga from '../lib/ga';
-import { transformBundle } from '../lib/transformBundle';
-import { API_URL } from '../lib/constants';
+import { getBlocks } from '../lib/api';
 
 export default function Home({ initialBlocks }) {
   useEffect(ga.pageview);
@@ -15,14 +14,8 @@ export default function Home({ initialBlocks }) {
 
   useEffect(() => {
     const { from } = router.query;
-
-    const fetchFrom = async () => {
-      const res = await fetch(`${API_URL}?from=${from}`);
-      const { blocks } = await res.json();
-      setBlocks(blocks.map(b => transformBundle(b)));
-    };
-
     if (from) {
+      const fetchFrom = async () => setBlocks(await getBlocks({ from }));
       fetchFrom();
     }
   }, [router.query.from]);
@@ -33,7 +26,6 @@ export default function Home({ initialBlocks }) {
     };
 
     router.events.on('routeChangeComplete', handleRouteChange);
-
     return () => {
       router.events.off('routeChangeComplete', handleRouteChange);
     }
@@ -64,13 +56,11 @@ export default function Home({ initialBlocks }) {
   )
 }
 
-export async function getServerSideProps(context) {
-  const url = context.query.from ? `${API_URL}/?from=${context.query.from}` : API_URL;
-  const res = await fetch(url);
-  const { blocks } = await res.json();
+export async function getServerSideProps({ query }) {
+  const { from } = query;
   return {
     props: {
-      initialBlocks: blocks.map(b => transformBundle(b))
+      initialBlocks: await getBlocks(from ? { from } : undefined)
     },
   }
 }
