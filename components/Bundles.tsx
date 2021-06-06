@@ -12,7 +12,7 @@ export default function Bundles({ bundles }) {
 
   useEffect(() => {
     if (router.query.block) {
-      findBundleAndOpen(router.query.block as unknown as number);
+      findBundleAndOpen(router.query.block as unknown as string);
     }
   }, [router.query.block]);
 
@@ -24,7 +24,7 @@ export default function Bundles({ bundles }) {
     setOpenModal(true);
   };
 
-  const findBundleAndOpen = async (blockNumber: number) => {
+  const findBundleAndOpen = async (blockNumber: string) => {
     const local = bundles.find(b => b.block_number == blockNumber);
     if (local) {
       setBundleAndOpen(local);
