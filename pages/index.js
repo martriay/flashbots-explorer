@@ -19,7 +19,7 @@ export default function Home({ initialBlocks }) {
     const fetchFrom = async () => {
       const res = await fetch(`${API_URL}?from=${from}`);
       const { blocks } = await res.json();
-      setBlocks(blocks);
+      setBlocks(blocks.map(b => transformBundle(b)));
     };
 
     if (from) {
@@ -63,8 +63,9 @@ export default function Home({ initialBlocks }) {
   )
 }
 
-export async function getServerSideProps() {
-  const res = await fetch(API_URL);
+export async function getServerSideProps(context) {
+  const url = context.query.from ? `${API_URL}/?from=${context.query.from}` : API_URL;
+  const res = await fetch(url);
   const { blocks } = await res.json();
   return {
     props: {
