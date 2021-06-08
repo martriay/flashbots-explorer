@@ -1,4 +1,5 @@
 # ⚡ Flashbots Explorer 🔍
+[![Netlify Status](https://api.netlify.com/api/v1/badges/a620bbb3-67cf-46bd-bfe9-1a44c2ef9e69/deploy-status)](https://app.netlify.com/sites/flashbots-explorer/deploys)
 
 Deployed at https://flashbots-explorer.marto.lol/
 
