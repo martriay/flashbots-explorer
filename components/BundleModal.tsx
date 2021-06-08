@@ -8,7 +8,6 @@ export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
   const router = useRouter();
   const close = () => {
-    router.back();
     setOpen(false);
   };
 
