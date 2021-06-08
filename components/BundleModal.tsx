@@ -9,6 +9,9 @@ export default function BundleModal({ open, bundle, setOpen }) {
   const router = useRouter();
   const close = () => {
     setOpen(false);
+    if (bundle) {
+      router.back();
+    }
   };
 
   useEffect(() => {
