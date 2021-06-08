@@ -30,7 +30,7 @@ export default function Bundles({ bundles }) {
       setBundleAndOpen(local);
     } else {
       try {
-        const blocks = await getBlocks({ blockNumber })
+        const blocks = await getBlocks({ block_number: blockNumber })
         if (blocks) {
           setBundleAndOpen(blocks[0]);
         }
