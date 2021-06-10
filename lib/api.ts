@@ -1,5 +1,3 @@
-import { transformBundle } from "./transformBundle";
-
 export const API_URL = 'https://blocks.flashbots.net/v1/blocks';
 
 export async function getBlocks(params: Record<string, string> = {}) {
@@ -8,4 +6,20 @@ export async function getBlocks(params: Record<string, string> = {}) {
   const res = await fetch(url);
   const { blocks } = await res.json();
   return blocks.map(block => transformBundle(block));
+}
+
+function getSubBundles(bundle) {
+  return bundle.transactions.reduce((acc, curr) => {
+    if (acc[curr.bundle_index]) {
+      acc[curr.bundle_index].push(curr);
+    } else {
+      acc[curr.bundle_index] = [curr];
+    }
+    return acc;
+  }, []);
+}
+
+function transformBundle(bundle) {
+  bundle.transactions = getSubBundles(bundle);
+  return bundle;
 }
