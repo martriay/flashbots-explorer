@@ -8,7 +8,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@ethersproject/units": "^5.3.0",
     "@headlessui/react": "^1.1.1",
     "abi-decoder": "^2.4.0",
     "csvtojson": "^2.0.10",

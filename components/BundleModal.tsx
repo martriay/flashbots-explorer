@@ -190,16 +190,14 @@ function BundleTransaction(transaction, index: number) {
   };
 
   useEffect( () => {
-    const getLogs = async () => {
-      const logs = await getReceipts(transaction);
-      setLogs(logs);
-    }
+    const getLogs = async () => setLogs(await getReceipts(transaction));
     getLogs();
   }, [transaction]);
 
   const coins = logs.reduce((acc, curr) => {
-    if (acc[curr.coin.name] === undefined && curr.coin.name.length > 0) {
+    if (curr.coin.name && (curr.coin.value || acc[curr.coin.name] === undefined)) {
       acc[curr.coin.name] = {
+        event: curr.coin.event,
         address: curr.coin.address,
         logo: curr.coin.logo,
         value: curr.coin.value,
@@ -240,19 +238,19 @@ function BundleTransaction(transaction, index: number) {
       </td>
       <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
           {
-            Object.keys(coins).map(coin => (coins[coin].logo
-              ? <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} /> 
-                { coin } 
-                { coins[coin].value > 0 ? " - "+coins[coin].value : "" } 
-                { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" } 
+            Object.keys(coins).map(coin => <div className="flex flex-row items-center">
+              <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+                {
+                  coins[coin].logo
+                    ? <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} />
+                    : <></>
+                }
+                <b>{ coin }</b>
               </a>
-              : <a key={ "a_" + index + now() } className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                { coin } 
-                { coins[coin].value > 0 ? " - "+coins[coin].value : "" }
-                { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" } 
-              </a>
-            ))
+              { coins[coin].value > 0 ? " " + coins[coin].value : "" }
+              { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" }
+              { coins[coin].value ? "" : ` (${coins[coin].event})` }
+            </div>)
           }
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-center">
