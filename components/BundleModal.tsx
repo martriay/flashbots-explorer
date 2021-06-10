@@ -201,7 +201,9 @@ function BundleTransaction(transaction, index: number) {
     if (acc[curr.coin.name] === undefined && curr.coin.name.length > 0) {
       acc[curr.coin.name] = {
         address: curr.coin.address,
-        logo: curr.coin.logo
+        logo: curr.coin.logo,
+        value: curr.coin.value,
+        ethValue: curr.coin.ethValue
       }
     }
     return acc;
@@ -240,10 +242,15 @@ function BundleTransaction(transaction, index: number) {
           {
             Object.keys(coins).map(coin => (coins[coin].logo
               ? <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} /> { coin }
+                <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} /> 
+                { coin } 
+                { coins[coin].value > 0 ? " - "+coins[coin].value : "" } 
+                { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" } 
               </a>
               : <a key={ "a_" + index + now() } className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                { coin }
+                { coin } 
+                { coins[coin].value > 0 ? " - "+coins[coin].value : "" }
+                { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" } 
               </a>
             ))
           }
