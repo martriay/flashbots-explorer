@@ -247,9 +247,11 @@ function BundleTransaction(transaction, index: number) {
                 }
                 <b>{ coin }</b>
               </a>
-              { coins[coin].value > 0 ? " " + coins[coin].value : "" }
-              { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" }
-              { coins[coin].value ? "" : ` (${coins[coin].event})` }
+              <span style={{ marginLeft: coins[coin].ethValue > 0 ? 17 : 0}}>
+                { coins[coin].value > 0 ? ` ${coins[coin].value}` : "" }
+                { coins[coin].ethValue > 0 ? ` ($${coins[coin].ethValue})` : "" }
+                { coins[coin].event ?  ` (${coins[coin].event})` : "" }
+              </span>
             </div>)
           }
       </td>
