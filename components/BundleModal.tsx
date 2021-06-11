@@ -181,7 +181,7 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
 </svg>;
 
 function BundleTransaction(transaction, index: number) {
-  const [logs, setLogs] = useState([]);
+  const [coins, setCoins] = useState([]);
 
   const router = useRouter();
   const onClick = (e, from) => {
@@ -190,22 +190,25 @@ function BundleTransaction(transaction, index: number) {
   };
 
   useEffect( () => {
-    const getLogs = async () => setLogs(await getReceipts(transaction));
+    const getLogs = async () => {
+      const _logs = await getReceipts(transaction);
+      let _coins = [];
+      await _logs.map( async (curr, i) => {
+        let { coin } = await curr;
+        if(coin.name != ""){
+          _coins[coin.name] = {
+            event: coin.event,
+            address: coin.address,
+            logo: coin.logo,
+            value: coin.value,
+            ethValue: coin.ethValue
+          }
+        }
+      });
+      setCoins(_coins);
+    }
     getLogs();
   }, [transaction]);
-
-  const coins = logs.reduce((acc, curr) => {
-    if (curr.coin.name && (curr.coin.value || acc[curr.coin.name] === undefined)) {
-      acc[curr.coin.name] = {
-        event: curr.coin.event,
-        address: curr.coin.address,
-        logo: curr.coin.logo,
-        value: curr.coin.value,
-        ethValue: curr.coin.ethValue
-      }
-    }
-    return acc;
-  }, {});
 
   // block_number: 12358944
   // coinbase_transfer: "9785908415014455"
@@ -238,21 +241,23 @@ function BundleTransaction(transaction, index: number) {
       </td>
       <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
           {
-            Object.keys(coins).map(coin => <div className="flex flex-row items-center">
-              <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                {
-                  coins[coin].logo
-                    ? <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} />
-                    : <></>
-                }
-                <b>{ coin }</b>
-              </a>
-              <span style={{ marginLeft: coins[coin].ethValue > 0 ? 17 : 0}}>
-                { coins[coin].value > 0 ? ` ${coins[coin].value}` : "" }
-                { coins[coin].ethValue > 0 ? ` ($${coins[coin].ethValue})` : "" }
-                { coins[coin].event ?  ` (${coins[coin].event})` : "" }
-              </span>
-            </div>)
+            Object.keys(coins).map(coin => 
+              <div className="flex flex-row items-center">
+                <a className="flex hover:underline min-w-max" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+                  {
+                    coins[coin].logo
+                      ? <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} />
+                      : <></>
+                  }
+                  <b>{ coin }</b>
+                </a>
+                <span style={{ margin: 2}}>
+                  { coins[coin].value > 0 ? ` ${coins[coin].value}` : "" }
+                  { coins[coin].ethValue > 0 ? ` ($${coins[coin].ethValue})` : "" }
+                  { coins[coin].event ? ` (${coins[coin].event})` : ""  }
+                </span>
+            </div>
+            )
           }
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-center">
