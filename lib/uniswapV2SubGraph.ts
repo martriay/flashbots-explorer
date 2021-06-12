@@ -21,9 +21,11 @@ const pairQL = (_address) =>`{
    pair(id: "${_address}") {
     token0 {
       symbol
+      name
     }
     token1 {
       symbol
+      name
     }
   }
 }`;
@@ -66,7 +68,7 @@ export async function getPairAddress(_address) {
     });
 
     let { data: { pair } } = await res.json();
-    if(pair != null){
+    if(pair !== null){
       c.coin = `${pair.token0.symbol}-${pair.token1.symbol}`
       break;
     }

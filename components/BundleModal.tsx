@@ -254,7 +254,7 @@ function BundleTransaction(transaction, index: number) {
                 <span style={{ margin: 2}}>
                   { coins[coin].value > 0 ? ` ${coins[coin].value}` : "" }
                   { coins[coin].ethValue > 0 ? ` ($${coins[coin].ethValue})` : "" }
-                  { coins[coin].event ? ` (${coins[coin].event})` : ""  }
+                  { coins[coin].value ? "" : ` (${coins[coin].event})` }
                 </span>
             </div>
             )
