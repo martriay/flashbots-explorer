@@ -46,22 +46,26 @@ export default function Bundles({ bundles }) {
   };
 
   const handleUserKeyPress = useCallback(event => {
-    if (!openModal) {
+    const { keyCode } = event;
+    const blockNumber = parseInt(router.query.block);
+    const prevBlockNumber = blockNumber - 1;
+    const nextBlockNumber = blockNumber + 1;
+
+    if (!blockNumber || !openModal) {
       return;
     }
 
-    const blockNumber = parseInt(router.query.block);
-    if (!blockNumber) {
-      return;
-    }
-    const { keyCode } = event;
+    let goToBlockNumber;
+
     if (keyCode == 37) {
       // left arrow
-      router.push(`/?block=${blockNumber - 1}`, undefined, { shallow: true });
+      goToBlockNumber = prevBlockNumber;
     } else if (keyCode === 39) {
       // right arrow
-      router.push(`/?block=${blockNumber + 1}`, undefined, { shallow: true });
+      goToBlockNumber = nextBlockNumber;
     }
+
+    router.push(`/?block=${goToBlockNumber}`, undefined, { shallow: true });
   }, [openModal, router.query.block]);
 
   useEffect(() => {
