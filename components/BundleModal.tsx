@@ -63,7 +63,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
                   {
                     bundle
                     ? <Bundle bundle={ bundle } />
-                    : <Error />
+                    : <Error blockNumber={ router.query.block } />
                   }
                 </div>
               </div>
@@ -150,7 +150,9 @@ const Bundle = ({ bundle }) => {
 
 function SubBundle({ subBundle, index } : { subBundle: any[], index?: number }) {
   return <>
-    { subBundle.map(BundleTransaction) }
+    { subBundle.map((transaction, index) => (
+      <BundleTransaction transaction={transaction} index={index} />
+    )) }
     {
       index === undefined
       ? <></>
@@ -180,7 +182,7 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 </svg>;
 
-function BundleTransaction(transaction, index: number) {
+function BundleTransaction({ transaction, index }) {
   const [logs, setLogs] = useState([]);
 
   const router = useRouter();
@@ -277,11 +279,11 @@ function BundleTransaction(transaction, index: number) {
   </Fragment>;
 }
 
-const Error = () => <div>
+const Error = ({ blockNumber }) => <div>
   <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
     Oops
   </Dialog.Title>
-  <div className="">Bundle not found, have this instead:  🍌</div>
+  <div className="">Bundle not found in block #{blockNumber}, have this instead:  🍌</div>
 </div>;
 
 function Address({ address } : { address: string }) {

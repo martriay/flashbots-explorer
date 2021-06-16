@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
@@ -44,6 +44,33 @@ export default function Bundles({ bundles }) {
     e.preventDefault();
     findBundleAndOpen(searchValue);
   };
+
+  const handleUserKeyPress = useCallback(event => {
+    if (!openModal) {
+      return;
+    }
+
+    const blockNumber = parseInt(router.query.block);
+    if (!blockNumber) {
+      return;
+    }
+    const { keyCode } = event;
+    if (keyCode == 37) {
+      // left arrow
+      router.push(`/?block=${blockNumber - 1}`, undefined, { shallow: true });
+    } else if (keyCode === 39) {
+      // right arrow
+      router.push(`/?block=${blockNumber + 1}`, undefined, { shallow: true });
+    }
+  }, [openModal, router.query.block]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleUserKeyPress);
+
+    return () => {
+      window.removeEventListener('keydown', handleUserKeyPress);
+    };
+  }, [handleUserKeyPress]);
 
   return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
