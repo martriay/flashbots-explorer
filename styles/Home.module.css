@@ -76,6 +76,7 @@
 }
 
 .footer a {
+  @apply text-pink-500;
   justify-content: center;
   align-items: center;
   flex-grow: 1;
@@ -83,14 +84,6 @@
 
 .footer a:hover {
   text-decoration: underline;
-}
-
-.tipjar {
-  @apply flex text-xs items-center mt-2;
-}
-
-.tipjar-address {
-  @apply mx-1 px-1 border-solid border rounded border-pink-500 text-pink-500;
 }
 
 .title a {

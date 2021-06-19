@@ -51,7 +51,6 @@ export default function Home({ initialBlocks }) {
 
       <footer className={styles.footer}>
         <span>brewed with ⚡  by <a href="https://marto.lol" target="_blank" rel="noopener noreferrer">marto.lol</a></span>
-        <span className={styles.tipjar}>❤️ tip jar: <span className={styles['tipjar-address']}>0x87122a7385fd61720d72290a6f2ed25b7eca7af7</span> 💸</span>
       </footer>
     </div>
   )
