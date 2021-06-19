@@ -33,6 +33,7 @@ export default function Home({ initialBlocks }) {
 
   return (
     <div className='App flex flex-col'>
+      <a className="text-center text-red-700 p-1 bg-yellow-400 hover:underline" href="https://gitcoin.co/grants/2871/flashbots-bundle-explorer">Find this app useful? Fund it on Gitcoin!</a>
       <Head>
         <title> 🤖 Flashbots Bundle Explorer ⚡ </title>
         <meta name="description" content="Explore Flashbots bundles" />
