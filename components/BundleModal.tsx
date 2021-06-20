@@ -10,7 +10,9 @@ export default function BundleModal({ open, bundle, setOpen }) {
   const close = () => {
     setOpen(false);
     if (bundle) {
-      router.back();
+      const { pathname, query } = router;
+      delete query.block;
+      router.push({ pathname, query });
     }
   };
 
