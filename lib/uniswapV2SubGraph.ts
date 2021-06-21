@@ -7,29 +7,15 @@
 //   "logoURI": "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389"
 // };
 
-const urlArr = [
-  "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2",
-  "https://api.thegraph.com/subgraphs/name/sushiswap/exchange",
-]
-
+const uniswapV2GQL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2";
 const ethQL = `{
   bundles (first:1) {
     ethPrice
   }
 }`;
-const pairQL = (_address) =>`{
-   pair(id: "${_address}") {
-    token0 {
-      symbol
-    }
-    token1 {
-      symbol
-    }
-  }
-}`;
 
 export async function getEthPrice() {
-  const res = await fetch(urlArr[0], {
+  const res = await fetch(uniswapV2GQL, {
     method: 'POST',
     headers: {
       'Accept': 'api_version=2',
@@ -45,32 +31,4 @@ export async function getEthPrice() {
   }
 
   return 1;
-}
-
-export async function getPairAddress(_address) {
-  let c = { 
-    coin: "", 
-    logo: "",
-    decimals: 18
-  };
-  const gQL = pairQL(_address);
-
-  for (let i in urlArr) {
-    let res = await fetch(urlArr[i], {
-      method: 'POST',
-      headers: {
-        'Accept': 'api_version=2',
-        'Content-Type': 'application/graphql'
-      },
-      body: JSON.stringify({ query : gQL })
-    });
-
-    let { data: { pair } } = await res.json();
-    if(pair != null){
-      c.coin = `${pair.token0.symbol}-${pair.token1.symbol}`
-      break;
-    }
-  }
-  
-  return c;
 }
