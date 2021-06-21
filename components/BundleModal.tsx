@@ -241,7 +241,7 @@ function BundleTransaction(transaction, index: number) {
       <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
           {
             Object.keys(coins).map(coin => <div className="flex flex-row items-center">
-              <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+              <a key={ "a_" + index + now() } className="flex hover:underline min-w-max" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
                 {
                   coins[coin].logo
                     ? <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} />
