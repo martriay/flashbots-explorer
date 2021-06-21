@@ -22,9 +22,9 @@ export default function Bundles({ bundles }) {
   const setBundleAndOpen = bundle => {
     if (bundle !== undefined) {
       router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
+      setBundle(bundle);
+      setOpenModal(true);
     }
-    setBundle(bundle);
-    setOpenModal(true);
   };
 
   const findBundleAndOpen = async (blockNumber: string) => {

@@ -24,7 +24,7 @@ export default function BundleModal({
 
   useEffect(() => {
     const { block } = router.query;
-    if (block === undefined) {
+    if (!block || block === "undefined") {
       setOpen(false);
     }
   }, [router.query.block]);
@@ -174,7 +174,11 @@ const Bundle = ({ bundle }) => {
 function SubBundle({ subBundle, index } : { subBundle: any[], index?: number }) {
   return <>
     { subBundle.map((transaction, index) => (
-      <BundleTransaction transaction={transaction} index={index} />
+      <BundleTransaction 
+        transaction={transaction}
+        index={index} 
+        key={index}
+      />
     )) }
     {
       index === undefined
