@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
@@ -18,7 +18,7 @@ export default function Bundles({ bundles }) {
   }, [router.query.block]);
 
   const setBundleAndOpen = bundle => {
-    if (bundle !== undefined) {
+    if (bundle) {
       router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
       setBundle(bundle);
       setOpenModal(true);
