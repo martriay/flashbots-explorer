@@ -9,9 +9,7 @@ export default function Bundles({ bundles }) {
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
-  const blockNumber = parseInt(router.query.block);
-  const prevBlockNumber = blockNumber && blockNumber - 1;
-  const nextBlockNumber = blockNumber && blockNumber + 1;
+
 
   useEffect(() => {
     if (router.query.block) {
@@ -48,40 +46,39 @@ export default function Bundles({ bundles }) {
     findBundleAndOpen(searchValue);
   };
 
-  const handleUserKeyPress = useCallback(event => {
-    const { keyCode } = event;
-    let goToBlockNumber;
-
-    if (keyCode == 37) {
-      // left arrow
-      goToBlockNumber = prevBlockNumber;
-    } else if (keyCode === 39) {
-      // right arrow
-      goToBlockNumber = nextBlockNumber;
+  useEffect(() => {
+    const handleUserKeyPress = event => {
+      const blockNumber = parseInt(router.query.block);
+      const prevBlockNumber = blockNumber && blockNumber - 1;
+      const nextBlockNumber = blockNumber && blockNumber + 1;
+      const { keyCode } = event;
+      let goToBlockNumber;
+  
+      if (keyCode == 37) {
+        // left arrow
+        goToBlockNumber = prevBlockNumber;
+      } else if (keyCode === 39) {
+        // right arrow
+        goToBlockNumber = nextBlockNumber;
+      }
+  
+      if (goToBlockNumber) {
+        router.push(`/?block=${goToBlockNumber}`, undefined, { shallow: true });
+      }
     }
 
-    router.push(`/?block=${goToBlockNumber}`, undefined, { shallow: true });
-  }, [openModal, router.query.block]);
-
-  useEffect(() => {
     window.addEventListener('keydown', handleUserKeyPress);
 
     return () => {
       window.removeEventListener('keydown', handleUserKeyPress);
     };
-  }, [handleUserKeyPress]);
+  }, [router.query.block]);
 
   return <div className="w-10/12 self-center text-center">
     <BundleModal 
       open={ openModal }
       bundle={ bundle }
       setOpen={ setOpenModal }
-      goToNextBundle={() => {
-        router.push(`/?block=${nextBlockNumber}`, undefined, { shallow: true });
-      }}
-      goToPrevBundle={() => {
-        router.push(`/?block=${prevBlockNumber}`, undefined, { shallow: true });
-      }}
     />
     <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>

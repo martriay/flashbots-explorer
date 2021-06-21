@@ -8,13 +8,12 @@ export default function BundleModal({
   open,
   bundle,
   setOpen,
-  goToNextBundle,
-  goToPrevBundle,
 }) {
   const cancelButtonRef = useRef();
   const router = useRouter();
   const close = () => {
     setOpen(false);
+
     if (bundle) {
       const { pathname, query } = router;
       delete query.block;
@@ -28,6 +27,16 @@ export default function BundleModal({
       setOpen(false);
     }
   }, [router.query.block]);
+
+  const blockNumber = parseInt(router.query.block);
+  const prevBlockNumber = blockNumber && blockNumber - 1;
+  const nextBlockNumber = blockNumber && blockNumber + 1;
+  const goToNextBundle=() => {
+    router.push(`/?block=${nextBlockNumber}`, undefined, { shallow: true });
+  }
+  const goToPrevBundle=() => {
+    router.push(`/?block=${prevBlockNumber}`, undefined, { shallow: true });
+  }
 
   return (
     <Transition show={open} as={Fragment}>
