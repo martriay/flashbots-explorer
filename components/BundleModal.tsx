@@ -4,16 +4,11 @@ import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
 import { getReceipts } from '../lib/getReceipts';
 
-export default function BundleModal({ 
-  open,
-  bundle,
-  setOpen,
-}) {
+export default function BundleModal({ open, bundle, setOpen, goToPrevBlock, goToNextBlock }) {
   const cancelButtonRef = useRef();
   const router = useRouter();
   const close = () => {
     setOpen(false);
-
     if (bundle) {
       const { pathname, query } = router;
       delete query.block;
@@ -23,20 +18,10 @@ export default function BundleModal({
 
   useEffect(() => {
     const { block } = router.query;
-    if (!block || block === "undefined") {
+    if (block === undefined) {
       setOpen(false);
     }
   }, [router.query.block]);
-
-  const blockNumber = parseInt(router.query.block);
-  const prevBlockNumber = blockNumber && blockNumber - 1;
-  const nextBlockNumber = blockNumber && blockNumber + 1;
-  const goToNextBundle=() => {
-    router.push(`/?block=${nextBlockNumber}`, undefined, { shallow: true });
-  }
-  const goToPrevBundle=() => {
-    router.push(`/?block=${prevBlockNumber}`, undefined, { shallow: true });
-  }
 
   return (
     <Transition show={open} as={Fragment}>
@@ -97,14 +82,14 @@ export default function BundleModal({
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={ goToNextBundle }
+                  onClick={ goToNextBlock }
                 >
                   Next
                 </button>
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={ goToPrevBundle }
+                  onClick={ goToPrevBlock }
                 >
                   Prev
                 </button>
@@ -317,9 +302,12 @@ function BundleTransaction({ transaction, index }) {
 
 const Error = ({ blockNumber }) => <div>
   <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
-    Oops
-  </Dialog.Title>
-  <div className="">Bundle not found in block #{blockNumber}, have this instead:  🍌</div>
+      Bundles in #
+      <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ blockNumber }`}>
+        { blockNumber }
+      </a>
+    </Dialog.Title>
+  <div className="">Oops, no bundles found in this block! Have this instead:  🍌</div>
 </div>;
 
 function Address({ address } : { address: string }) {

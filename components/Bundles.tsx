@@ -10,6 +10,11 @@ export default function Bundles({ bundles }) {
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
 
+  const blockNumber = parseInt(router.query.block);
+  const prevBlockNumber = blockNumber && blockNumber - 1;
+  const nextBlockNumber = blockNumber && blockNumber + 1;
+  const goToBlock = (blockNumber: number) => 
+    router.push(`/?block=${blockNumber}`, undefined, { shallow: true });
 
   useEffect(() => {
     if (router.query.block) {
@@ -18,13 +23,11 @@ export default function Bundles({ bundles }) {
   }, [router.query.block]);
 
   const setBundleAndOpen = bundle => {
-    if (bundle) {
+    if (bundle !== undefined) {
       router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
     }
-
     setBundle(bundle);
     setOpenModal(true);
-
   };
 
   const findBundleAndOpen = async (blockNumber: string) => {
@@ -50,9 +53,6 @@ export default function Bundles({ bundles }) {
 
   useEffect(() => {
     const handleUserKeyPress = event => {
-      const blockNumber = parseInt(router.query.block);
-      const prevBlockNumber = blockNumber && blockNumber - 1;
-      const nextBlockNumber = blockNumber && blockNumber + 1;
       const { keyCode } = event;
       let goToBlockNumber;
   
@@ -65,7 +65,7 @@ export default function Bundles({ bundles }) {
       }
   
       if (goToBlockNumber) {
-        router.push(`/?block=${goToBlockNumber}`, undefined, { shallow: true });
+        goToBlock(goToBlockNumber);
       }
     }
 
@@ -78,9 +78,11 @@ export default function Bundles({ bundles }) {
 
   return <div className="w-10/12 self-center text-center">
     <BundleModal 
-      open={ openModal }
-      bundle={ bundle }
+      open={ openModal } 
+      bundle={ bundle } 
       setOpen={ setOpenModal }
+      goToNextBlock={ () => goToBlock(nextBlockNumber) }
+      goToPrevBlock={ () => goToBlock(prevBlockNumber) }
     />
     <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>
