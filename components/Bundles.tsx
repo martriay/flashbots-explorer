@@ -10,12 +10,6 @@ export default function Bundles({ bundles }) {
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
 
-  const blockNumber = parseInt(router.query.block);
-  const prevBlockNumber = blockNumber && blockNumber - 1;
-  const nextBlockNumber = blockNumber && blockNumber + 1;
-  const goToBlock = (blockNumber: number) => 
-    router.push(`/?block=${blockNumber}`, undefined, { shallow: true });
-
   useEffect(() => {
     if (router.query.block) {
       findBundleAndOpen(router.query.block as unknown as string);
@@ -51,39 +45,8 @@ export default function Bundles({ bundles }) {
     findBundleAndOpen(searchValue);
   };
 
-  useEffect(() => {
-    const handleUserKeyPress = event => {
-      const { keyCode } = event;
-      let goToBlockNumber;
-  
-      if (keyCode == 37) {
-        // left arrow
-        goToBlockNumber = prevBlockNumber;
-      } else if (keyCode === 39) {
-        // right arrow
-        goToBlockNumber = nextBlockNumber;
-      }
-  
-      if (goToBlockNumber) {
-        goToBlock(goToBlockNumber);
-      }
-    }
-
-    window.addEventListener('keydown', handleUserKeyPress);
-
-    return () => {
-      window.removeEventListener('keydown', handleUserKeyPress);
-    };
-  }, [router.query.block]);
-
   return <div className="w-10/12 self-center text-center">
-    <BundleModal 
-      open={ openModal } 
-      bundle={ bundle } 
-      setOpen={ setOpenModal }
-      goToNextBlock={ () => goToBlock(nextBlockNumber) }
-      goToPrevBlock={ () => goToBlock(prevBlockNumber) }
-    />
+    <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>
       <input type="number" onChange={ e => setSearch(e.target.value) } />
