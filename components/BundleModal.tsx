@@ -7,6 +7,19 @@ import { getReceipts } from '../lib/getReceipts';
 export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
   const router = useRouter();
+  const blockNumber = Number(router.query.block);
+  const goToBlock = (blockNumber: number) => router.push(`/?block=${blockNumber}`, undefined, { shallow: true });
+  const goToPrevBlock = () => goToBlock(blockNumber - 1);
+  const goToNextBlock = () => goToBlock(blockNumber + 1);
+
+  const handleUserKeyPress = ({ keyCode }) => {
+    if (keyCode == 37) {
+      goToPrevBlock();
+    } else if (keyCode === 39) {
+      goToNextBlock();
+    }
+  };
+
   const close = () => {
     setOpen(false);
     if (bundle) {
@@ -17,9 +30,13 @@ export default function BundleModal({ open, bundle, setOpen }) {
   };
 
   useEffect(() => {
-    const { block } = router.query;
-    if (block === undefined) {
+    if (router.query.block === undefined) {
       setOpen(false);
+    } else {
+      window.addEventListener('keydown', handleUserKeyPress);
+      return () => {
+        window.removeEventListener('keydown', handleUserKeyPress);
+      };
     }
   }, [router.query.block]);
 
@@ -65,19 +82,39 @@ export default function BundleModal({ open, bundle, setOpen }) {
                   {
                     bundle
                     ? <Bundle bundle={ bundle } />
-                    : <Error />
+                    : <Error blockNumber={ router.query.block } />
                   }
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="justify-between bg-gray-50 px-4 py-3 sm:px-6 sm:flex">
                 <button
                   type="button"
                   className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={ close }
-                  ref={cancelButtonRef}
+                  ref={ cancelButtonRef }
                 >
                   Close
                 </button>
+                <span className="traverse">
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={ goToNextBlock }
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    onClick={ goToPrevBlock }
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </span>
               </div>
             </div>
           </Transition.Child>
@@ -89,12 +126,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
 
 const Bundle = ({ bundle }) => {
   return <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
-    <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
-      Bundles in #
-      <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle?.block_number }`}>
-        { bundle?.block_number }
-      </a>
-    </Dialog.Title>
+    <Title blockNumber={ bundle?.block_number } />
 
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -152,7 +184,9 @@ const Bundle = ({ bundle }) => {
 
 function SubBundle({ subBundle, index } : { subBundle: any[], index?: number }) {
   return <>
-    { subBundle.map(BundleTransaction) }
+    {
+      subBundle.map((transaction, index) => <BundleTransaction transaction={transaction} index={index} key={index} />)
+    }
     {
       index === undefined
       ? <></>
@@ -182,7 +216,7 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
 </svg>;
 
-function BundleTransaction(transaction, index: number) {
+function BundleTransaction({ transaction, index }) {
   const [logs, setLogs] = useState([]);
 
   const router = useRouter();
@@ -279,12 +313,19 @@ function BundleTransaction(transaction, index: number) {
   </Fragment>;
 }
 
-const Error = () => <div>
-  <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
-    Oops
-  </Dialog.Title>
-  <div className="">Bundle not found, have this instead:  🍌</div>
+const Error = ({ blockNumber }) => <div>
+  <Title blockNumber={ blockNumber } />
+  <div className="m-5">Oops, no bundles found in this block! Have this instead:  🍌</div>
 </div>;
+
+function Title({ blockNumber }) {
+  return <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
+    Bundles in #
+    <a className="hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ blockNumber }`}>
+      { blockNumber }
+    </a>
+  </Dialog.Title>;
+}
 
 function Address({ address } : { address: string }) {
   const size = 6;
