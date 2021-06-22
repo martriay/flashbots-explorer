@@ -14,9 +14,9 @@ export default function BundleModal({ open, bundle, setOpen }) {
 
   const handleUserKeyPress = ({ keyCode }) => {
     if (keyCode == 37) {
-      goToPrevBlock();
-    } else if (keyCode === 39) {
       goToNextBlock();
+    } else if (keyCode === 39) {
+      goToPrevBlock();
     }
   };
 
@@ -99,7 +99,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
                   <button
                     type="button"
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={ goToNextBlock }
+                    onClick={ goToPrevBlock }
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -108,7 +108,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
                   <button
                     type="button"
                     className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={ goToPrevBlock }
+                    onClick={ goToNextBlock }
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
