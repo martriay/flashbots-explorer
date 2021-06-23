@@ -1,11 +1,11 @@
+require('dotenv').config()
 import Head from 'next/head';
 import React, { useEffect} from 'react';
 import { useRouter } from 'next/router';
 import * as ga from '../lib/ga';
-import { BundleDataProvider } from '../context/BundleDataProvider';
 import styles from '../styles/Home.module.css';
 import Home from './Home';
-require('dotenv').config()
+import { BundleDataProvider } from '../context/BundleData/BundleDataProvider';
 
 export default function App() {
   useEffect(ga.pageview);

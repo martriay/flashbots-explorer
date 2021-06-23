@@ -2,7 +2,6 @@
 import { Fragment, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
-import { getReceipts } from '../lib/getReceipts';
 
 export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
