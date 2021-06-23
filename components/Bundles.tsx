@@ -2,19 +2,35 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import BundleModal from './BundleModal';
 import styles from '../styles/Home.module.css';
-import { getBlocks } from '../lib/api';
+import { useBundleData } from '../context/BundleData/BundleDataProvider';
 
-export default function Bundles({ bundles }) {
+export default function Bundles({ }) {
   const router = useRouter();
+  const { blocks, setFilters, filters } = useBundleData()
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
 
   useEffect(() => {
-    if (router.query.block) {
-      findBundleAndOpen(router.query.block as unknown as string);
+    if (router.query.block && blocks.length > 0) {
+      const blockNumber = router.query.block as unknown as string
+      const local = blocks.find(b => b.block_number == blockNumber);
+      if (local) {
+        setBundleAndOpen(local);
+      } else if(!filters.block_number) {
+        setFilters({
+          ...filters,
+          block_number: blockNumber
+        })
+      }
+    } else if (filters.block_number) {
+      setBundleAndOpen(undefined)
+      setFilters({
+        ...filters,
+        block_number: undefined
+      })
     }
-  }, [router.query.block]);
+  }, [router.query.block, blocks]);
 
   const setBundleAndOpen = bundle => {
     if (bundle !== undefined) {
@@ -25,19 +41,7 @@ export default function Bundles({ bundles }) {
   };
 
   const findBundleAndOpen = async (blockNumber: string) => {
-    const local = bundles.find(b => b.block_number == blockNumber);
-    if (local) {
-      setBundleAndOpen(local);
-    } else {
-      try {
-        const blocks = await getBlocks({ block_number: blockNumber })
-        if (blocks) {
-          setBundleAndOpen(blocks[0]);
-        }
-    } catch (e) {
-        setBundleAndOpen(undefined);
-      }
-    }
+    
   };
 
   const submit = e => {
@@ -67,7 +71,7 @@ export default function Bundles({ bundles }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { bundles?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
+              { blocks?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
             </tbody>
           </table>
         </div>
