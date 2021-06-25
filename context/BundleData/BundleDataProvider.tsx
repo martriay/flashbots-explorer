@@ -87,9 +87,7 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     // params["limit"] = `${Number(params["limit"]) * PAGES_AHEAD}`
     params["limit"] = `${Number(params["limit"]) + 1}`
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
-    debugger
     const res = await fetch(url)
-    debugger
     const { blocks } = await res.json()
     debugger
     setBlocks(blocks.map(block => transformBundle(block)))
