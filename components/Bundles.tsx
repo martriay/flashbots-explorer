@@ -71,8 +71,20 @@ export default function Bundles({ }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { blocks?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
+              { blocks?.sort(sortBlocks).slice(0, filters.limit).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
             </tbody>
+            {
+              blocks.length > filters.limit && (
+                <section>
+                  <button>
+                    prev
+                  </button>
+                  <button>
+                    next
+                  </button>
+                </section>
+              )
+            }
           </table>
         </div>
       </div>

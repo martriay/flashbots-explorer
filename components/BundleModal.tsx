@@ -1,7 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useRef, useState, useEffect } from 'react';
+import React, { Fragment, useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Dialog, Transition } from '@headlessui/react';
+import { useTokenData } from '../context/TokenData/TokenDataProvider';
+import { Address } from './Address';
+import { timeNow } from '../helpers/general';
+import { ErrorModal } from './modals/ErrorModal';
 
 export default function BundleModal({ open, bundle, setOpen }) {
   const cancelButtonRef = useRef();
@@ -62,7 +66,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
                   {
                     bundle
                     ? <Bundle bundle={ bundle } />
-                    : <Error />
+                    : <ErrorModal />
                   }
                 </div>
               </div>
@@ -181,7 +185,7 @@ const ExternalLinkIcon = <svg xmlns="http://www.w3.org/2000/svg" className="h-6 
 
 function BundleTransaction(transaction, index: number) {
   const [logs, setLogs] = useState([]);
-
+  const { getReceipts } = useTokenData()
   const router = useRouter();
   const onClick = (e, from) => {
     e.preventDefault();
@@ -238,10 +242,10 @@ function BundleTransaction(transaction, index: number) {
       <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
           {
             Object.keys(coins).map(coin => <div className="flex flex-row items-center">
-              <a key={ "a_" + index + now() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
+              <a key={ "a_" + index + timeNow() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
                 {
                   coins[coin].logo
-                    ? <img className="w-4 mr-1" key={ "i_" + index + now() } src={coins[coin].logo} />
+                    ? <img className="w-4 mr-1" key={ "i_" + index + timeNow() } src={coins[coin].logo} />
                     : <></>
                 }
                 <b>{ coin }</b>
@@ -276,25 +280,3 @@ function BundleTransaction(transaction, index: number) {
   </Fragment>;
 }
 
-const Error = () => <div>
-  <Dialog.Title as="h3" className="m-5 text-lg leading-6 font-medium text-gray-900">
-    Oops
-  </Dialog.Title>
-  <div className="">Bundle not found, have this instead:  🍌</div>
-</div>;
-
-function Address({ address } : { address: string }) {
-  const size = 6;
-  const shorten = (address: string): string => address.slice(0, size) + '...' + address.slice(-size);
-  return <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ address }`}>
-    <div className="text-sm text-gray-900">{ shorten(address) } </div>
-  </a>;
-}
-
-const now = () => {
-  return randomMaxMin(Date.now(), Date.now()*10000);
-};
-
-const randomMaxMin = (max, min) => {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};

@@ -7,6 +7,9 @@ type BundleDataContextProps = {
   children: React.ReactNode | React.ReactNode[]
 }
 
+// If we want to display that theres more pages, we'll need to check on ther requests
+// const PAGES_AHEAD = 5
+
 // TODO Update
 export type Block = {
   hash: string
@@ -74,6 +77,9 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     // TODO: Type Safety
     let params: Record<string, string> = {}
     Object.keys(filters).map(key => params[key] = filters[key])
+    // This fetchs additional pages to a limit 
+    // params["limit"] = `${Number(params["limit"]) * PAGES_AHEAD}`
+    params["limit"] = `${Number(params["limit"]) + 1}`
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
     const res = await fetch(url)
     const { blocks } = await res.json()
