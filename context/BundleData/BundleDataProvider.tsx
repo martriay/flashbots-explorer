@@ -74,7 +74,6 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     // TODO: Type Safety
     let params: Record<string, string> = {}
     Object.keys(filters).map(key => params[key] = filters[key])
-
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
     const res = await fetch(url)
     const { blocks } = await res.json()
