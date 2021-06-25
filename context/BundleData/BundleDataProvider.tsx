@@ -14,6 +14,10 @@ type BundleDataContextProps = {
 export type Block = {
   hash: string
   block_number: string
+  miner_reward?: number
+  gas_used?: number
+  // TODO: type this 
+  transactions: any[]
 }
 
 export interface IBundleFilters {
@@ -27,6 +31,7 @@ interface IBundleDataContext {
   blocks: Block[]
   page: number
   setPage: (page: number) => void
+  morePages: boolean
   filters: IBundleFilters
   setFilters: (newFilter: IBundleFilters) => void
 }
@@ -37,6 +42,7 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
   const { query } = useRouter();
   const [blocks, setBlocks] = useState<Block[]>([])
   const [page, setPage] = useState<number>(1)
+  const [morePages, setMorePages] = useState<boolean>(false)
   const [filters, _setFilters] = useState<IBundleFilters>({
     limit: 10
   })
@@ -81,10 +87,21 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     // params["limit"] = `${Number(params["limit"]) * PAGES_AHEAD}`
     params["limit"] = `${Number(params["limit"]) + 1}`
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
+    debugger
     const res = await fetch(url)
+    debugger
     const { blocks } = await res.json()
+    debugger
     setBlocks(blocks.map(block => transformBundle(block)))
   }, [])
+
+  useEffect(() => {
+    if(blocks.length > filters.limit) {
+      setMorePages(true)
+    }else {
+      setMorePages(false)
+    }
+  }, [blocks, setMorePages])
 
   // Automatically update when view is changed
   useEffect(() => {
@@ -101,6 +118,7 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
         blocks,
         page,
         setPage,
+        morePages,
         filters,
         setFilters
       }}
