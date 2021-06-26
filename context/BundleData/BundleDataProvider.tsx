@@ -16,8 +16,25 @@ export type Block = {
   block_number: string
   miner_reward?: number
   gas_used?: number
+  coinbase_transfers: number
+  gas_price: number
+  miner: string
   // TODO: type this 
   transactions: any[]
+}
+
+
+export type Transaction = {
+  block_number: number
+  bundle_index: number
+  coinbase_transfer: number
+  eoa_address: string
+  gas_price: number
+  gas_used: number
+  to_address: string
+  total_miner_reward: number
+  transaction_hash: string
+  tx_index: number
 }
 
 export interface IBundleFilters {
@@ -85,13 +102,12 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     Object.keys(filters).map(key => params[key] = filters[key])
     // This fetchs additional pages to a limit 
     // params["limit"] = `${Number(params["limit"]) * PAGES_AHEAD}`
-    params["limit"] = `${Number(params["limit"]) + 1}`
+    params["limit"] = `${(Number(params["limit"]) * page) + 1}`
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
     const res = await fetch(url)
     const { blocks } = await res.json()
-    debugger
     setBlocks(blocks.map(block => transformBundle(block)))
-  }, [])
+  }, [blocks, page])
 
   useEffect(() => {
     if(blocks.length > filters.limit) {
@@ -103,8 +119,12 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
 
   // Automatically update when view is changed
   useEffect(() => {
-    getBlocks()
-  }, [filters, page])
+    if ((page * filters.limit) + 1 > blocks.length) {
+      getBlocks()
+    } else if (page === 1) {
+      getBlocks()
+    }
+  }, [filters, page, blocks])
 
   const setFilters = useCallback((filter: IBundleFilters) => {
     

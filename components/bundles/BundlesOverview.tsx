@@ -79,11 +79,11 @@ export default function BundlesOverview({ }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { blocks?.sort(sortBlocks).slice(0, filters.limit).map((b, i) => <BundleRow index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
+              { blocks?.sort(sortBlocks).filter((block, index) => index < ((page - 1) * filters.limit) + filters.limit && index >= (page - 1) * filters.limit).map((b, i) => <BundleRow index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
             </tbody>
           </table>
           {
-            (blocks.length > filters.limit) || page > 1  && (
+            ((blocks.length > filters.limit) || page > 1)  && (
               <section className={styles.pagination}>
                 <button 
                   onClick={() => {
@@ -91,11 +91,12 @@ export default function BundlesOverview({ }) {
                       setPage(page - 1)
                     }
                   }}
+                  disabled={page === 1}
                   className={clsx({
                     "disabled": page === 1
                   })}
                 >
-                  prev
+                  Previous page
                 </button>
                 <button 
                   onClick={() => {
@@ -103,11 +104,12 @@ export default function BundlesOverview({ }) {
                       setPage(page + 1)
                     }
                   }}
+                  disabled={!morePages}
                   className={clsx({
                     "disabled": !morePages
                   })}
                 >
-                  next
+                  Next page
                 </button>
               </section>
             )
