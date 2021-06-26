@@ -36,6 +36,8 @@ export default function App() {
             <span className={styles.gradient}>Flashbots Bundle Explorer </span>
             <span className={styles.emoji}>🤖</span>
           </h3>
+          <a className="text-center text-red-700 p-1 bg-yellow-400 hover:underline"
+            href="https://gitcoin.co/grants/2871/flashbots-bundle-explorer">Find this app useful? Fund it on Gitcoin!</a>
           <Head>
             <title> 🤖 Flashbots Bundle Explorer ⚡ </title>
             <meta name="description"
@@ -48,11 +50,9 @@ export default function App() {
           {/*   */}
           <Home />
           <footer className={styles.footer}>
-            <span>brewed with ⚡  by <a href="https://marto.lol"
-              target="_blank"
+            <span>⚠️ beware of <a href="https://marto.lol"
+              target="_blank" 
               rel="noopener noreferrer">marto.lol</a></span>
-            <span className={styles.tipjar}>❤️ tip jar:
-              <span className={styles["tipjar-address"]}>0x87122a7385fd61720d72290a6f2ed25b7eca7af7</span> 💸</span>
           </footer>
         </article>
       </TokenDataProvider>
