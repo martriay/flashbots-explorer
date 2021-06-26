@@ -1,6 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useRef, useEffect, useCallback } from "react"
-import { useRouter } from "next/router"
+import React, { Fragment, useRef, useCallback } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { Bundle } from "../bundles/Bundle"
 import { ErrorModal } from "../modals/ErrorModal"
@@ -14,7 +13,7 @@ interface IBundleModal {
 
 export default function BundleModal({ open, bundle, close }: IBundleModal) {
   const cancelButtonRef = useRef()
-  const router = useRouter()
+  // const router = useRouter()
   // const close = () => {
   //   setOpen(false)
   //   if (bundle) {
@@ -29,12 +28,12 @@ export default function BundleModal({ open, bundle, close }: IBundleModal) {
     // }
   }, [close])
 
-  useEffect(() => {
-    const { block } = router.query
-    if (block === undefined) {
-      handleClose()
-    }
-  }, [router.query, handleClose])
+  // useEffect(() => {
+  //   const { block } = router.query
+  //   if (block === undefined) {
+  //     handleClose()
+  //   }
+  // }, [router.query, handleClose])
 
   return (
     <Transition show={open}
