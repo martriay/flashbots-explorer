@@ -1,6 +1,7 @@
-import { Block } from "../../context/BundleData/BundleDataProvider";
-import { ExternalLinkIcon } from "../icons/externalLink.icon";
-import { OpenBookIcon } from "../icons/openBook.icon";
+import React from "react"
+import { Block } from "../../context/BundleData/BundleDataProvider"
+import { ExternalLinkIcon } from "../icons/externalLink.icon"
+import { OpenBookIcon } from "../icons/openBook.icon"
 
 interface IBundleRow {
   index: number
@@ -10,13 +11,16 @@ interface IBundleRow {
 
 export const BundleRow = ({ index, bundle, setBundleAndOpen }: IBundleRow) => {
   const onClick = e => {
-    e.preventDefault();
-    setBundleAndOpen(bundle);
-  };
+    e.preventDefault()
+    setBundleAndOpen(bundle)
+  }
 
-  return <tr className={ index % 2 ? 'bg-gray-50' : '' }>
+  return <tr className={ index % 2 ? "bg-gray-50" : "" }>
     <td className="block-number px-6 py-4 whitespace-nowrap text-center">
-      <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/block/${ bundle.block_number }`}>
+      <a className="flex text-sm justify-center hover:underline"
+        target="_blank"
+        rel="noreferrer"
+        href={`https://etherscan.io/block/${ bundle.block_number }`}>
         { ExternalLinkIcon }
         <span className="ml-3"> { bundle?.block_number } </span>
       </a>
@@ -40,7 +44,8 @@ export const BundleRow = ({ index, bundle, setBundleAndOpen }: IBundleRow) => {
       </div>
     </td>
     <td className="px-6 py-4 whitespace-nowrap flex justify-center">
-      <a href="#" onClick={ onClick }> { OpenBookIcon }</a>
+      <a href="#"
+        onClick={ onClick }> { OpenBookIcon }</a>
     </td>
-  </tr>;
+  </tr>
 }

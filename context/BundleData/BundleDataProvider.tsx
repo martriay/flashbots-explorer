@@ -56,24 +56,24 @@ interface IBundleDataContext {
 const BundleDataContext = React.createContext<IBundleDataContext | undefined>(undefined)
 
 const BundleDataProvider = ({ children }: BundleDataContextProps) => {
-  const { query } = useRouter();
+  const { query } = useRouter()
   const [blocks, setBlocks] = useState<Block[]>([])
   const [page, setPage] = useState<number>(1)
   const [morePages, setMorePages] = useState<boolean>(false)
   const [filters, _setFilters] = useState<IBundleFilters>({
     limit: 10
   })
-
+  const [pageMutex, setPageMutex] = useState(false)
   // Update filter from query
   useEffect(() => {
-    const { from } = query;
+    const { from } = query
     if (from && filters.from != from) {
       _setFilters({
         ...filters,
         from: from
       })
     }
-  }, [query.from]);
+  }, [query, filters])
 
   useEffect(() => {
     // Change page back to first if filters are changed
@@ -83,31 +83,42 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
   function getSubBundles(bundle) {
     return bundle.transactions.reduce((acc, curr) => {
       if (acc[curr.bundle_index]) {
-        acc[curr.bundle_index].push(curr);
+        acc[curr.bundle_index].push(curr)
       } else {
-        acc[curr.bundle_index] = [curr];
+        acc[curr.bundle_index] = [curr]
       }
-      return acc;
-    }, []);
+      return acc
+    }, [])
   }
-  
-  function transformBundle(bundle) {
-    bundle.transactions = getSubBundles(bundle);
-    return bundle;
-  }
+
+  const transformBundle = useCallback((bundle) => {
+    bundle.transactions = getSubBundles(bundle)
+    return bundle
+  }, [])
 
   const getBlocks = useCallback(async () => {
     // TODO: Type Safety
-    let params: Record<string, string> = {}
+    const params: Record<string, string> = {}
     Object.keys(filters).map(key => params[key] = filters[key])
     // This fetchs additional pages to a limit 
     // params["limit"] = `${Number(params["limit"]) * PAGES_AHEAD}`
     params["limit"] = `${(Number(params["limit"]) * page) + 1}`
     const url = `${process.env.FLASHBOTS_API_URL}/?${new URLSearchParams(params)}`
     const res = await fetch(url)
-    const { blocks } = await res.json()
-    setBlocks(blocks.map(block => transformBundle(block)))
-  }, [blocks, page])
+    const resJson = await res.json()
+    if (resJson.blocks !== undefined) {
+      const existingBlocknumbers = blocks.map(block => block.block_number)
+      const newBlocks = resJson.blocks
+        .map(block => transformBundle(block)).filter(newBlock => existingBlocknumbers.indexOf(newBlock.block_number) < 0)
+      if (newBlocks.length > 0) {
+        setBlocks([
+          ...blocks,
+          ...newBlocks
+        ])
+      }
+    }
+    setPageMutex(false)
+  }, [filters, blocks, page, transformBundle])
 
   useEffect(() => {
     if(blocks.length > filters.limit) {
@@ -115,20 +126,34 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     }else {
       setMorePages(false)
     }
-  }, [blocks, setMorePages])
+  }, [blocks, filters.limit, setMorePages])
 
   // Automatically update when view is changed
   useEffect(() => {
-    if ((page * filters.limit) + 1 > blocks.length) {
-      getBlocks()
-    } else if (page === 1) {
-      getBlocks()
+    if (!pageMutex) {
+      if ((page * filters.limit) + 1 > blocks.length) {
+        setPageMutex(true)
+        getBlocks()
+      } else if (page === 1) {
+        setPageMutex(true)
+        getBlocks()
+      }
     }
-  }, [filters, page, blocks])
+  }, [filters, page, blocks, pageMutex, getBlocks])
 
   const setFilters = useCallback((filter: IBundleFilters) => {
-    
-  }, [])
+    // This intermidiary function is for removing filters gracefully later on
+    const newItem: IBundleFilters = {
+      limit: 10
+    }
+    Object.keys(filter).map(key => {
+      if (filter[key]) {
+        newItem[key] = filter[key]
+      }
+    })
+
+    _setFilters(newItem)
+  }, [_setFilters])
 
   return (
     <BundleDataContext.Provider

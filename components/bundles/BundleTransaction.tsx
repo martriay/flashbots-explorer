@@ -1,23 +1,23 @@
-import { useRouter } from "next/router";
-import React, { Fragment, useEffect, useState } from "react";
-import { useTokenData } from "../../context/TokenData/TokenDataProvider";
-import { timeNow } from "../../helpers/general";
-import { Address } from "../Address";
-import { ExternalLinkIcon } from "../icons/externalLink.icon";
+import { useRouter } from "next/router"
+import React, { Fragment, useEffect, useState } from "react"
+import { useTokenData } from "../../context/TokenData/TokenDataProvider"
+import { timeNow } from "../../helpers/general"
+import { Address } from "../Address"
+import { ExternalLinkIcon } from "../icons/externalLink.icon"
 
 export const BundleTransaction = (transaction, index: number) => {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState([])
   const { getReceipts } = useTokenData()
-  const router = useRouter();
+  const router = useRouter()
   const onClick = (e, from) => {
-    e.preventDefault();
-    router.push(`/?from=${from}`, undefined, { shallow: true });
-  };
+    e.preventDefault()
+    router.push(`/?from=${from}`, undefined, { shallow: true })
+  }
 
-  useEffect( () => {
-    const getLogs = async () => setLogs(await getReceipts(transaction));
-    getLogs();
-  }, [transaction]);
+  useEffect(() => {
+    const getLogs = async () => setLogs(await getReceipts(transaction))
+    getLogs()
+  }, [transaction, getReceipts])
 
   const coins = logs.reduce((acc, curr) => {
     if (curr.coin.name && (curr.coin.value || acc[curr.coin.name] === undefined)) {
@@ -29,8 +29,8 @@ export const BundleTransaction = (transaction, index: number) => {
         ethValue: curr.coin.ethValue
       }
     }
-    return acc;
-  }, {});
+    return acc
+  }, {})
 
   // block_number: 12358944
   // coinbase_transfer: "9785908415014455"
@@ -42,9 +42,13 @@ export const BundleTransaction = (transaction, index: number) => {
   // transaction_hash: "0xedbaa982717813b69e215fe08525ae85c3686a095a1b908714ef8755f58e754d"
   // tx_index: 0
   return <Fragment key={"f_" + index}>
-    <tr key={ index } className={ index % 2 ? 'bg-gray-50' : '' }>
+    <tr key={ index }
+      className={ index % 2 ? "bg-gray-50" : "" }>
       <td className="block-number px-6 py-4 whitespace-nowrap text-center">
-        <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
+        <a className="flex text-sm justify-center hover:underline"
+          target="_blank"
+          rel="noreferrer"
+          href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
           { ExternalLinkIcon }
           <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
         </a>
@@ -62,21 +66,29 @@ export const BundleTransaction = (transaction, index: number) => {
         <Address address={ transaction?.to_address } />
       </td>
       <td className="flex flex-col px-6 py-4 whitespace-nowrap text-xs justify-center">
-          {
-            Object.keys(coins).map(coin => <div className="flex flex-row items-center">
-              <a key={ "a_" + index + timeNow() } className="flex hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/address/${ coins[coin].address }`} style={{ margin: 3}}>
-                {
-                  coins[coin].logo
-                    ? <img className="w-4 mr-1" key={ "i_" + index + timeNow() } src={coins[coin].logo} />
-                    : <></>
-                }
-                <b>{ coin }</b>
-              </a>
-              { coins[coin].value > 0 ? " " + coins[coin].value : "" }
-              { coins[coin].ethValue > 0 ? " ($"+coins[coin].ethValue +")" : "" }
-              { coins[coin].value ? "" : ` (${coins[coin].event})` }
-            </div>)
-          }
+        {
+          Object.keys(coins).map((coin, index) => <div key={`link-${index}`}
+            className="flex flex-row items-center">
+            <a key={ "a_" + index + timeNow() }
+              className="flex hover:underline"
+              target="_blank"
+              rel="noreferrer"
+              href={`https://etherscan.io/address/${ coins[coin].address }`}
+              style={{ margin: 3 }}>
+              {
+                coins[coin].logo
+                  ? <img className="w-4 mr-1"
+                    key={ "i_" + index + timeNow() }
+                    src={coins[coin].logo} />
+                  : <></>
+              }
+              <b>{ coin }</b>
+            </a>
+            { coins[coin].value > 0 ? " " + coins[coin].value : "" }
+            { coins[coin].ethValue > 0 ? " ($" + coins[coin].ethValue + ")" : "" }
+            { coins[coin].value ? "" : ` (${coins[coin].event})` }
+          </div>)
+        }
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-center">
         <div className="text-sm text-gray-900">
@@ -99,6 +111,6 @@ export const BundleTransaction = (transaction, index: number) => {
         </div>
       </td>
     </tr>
-  </Fragment>;
+  </Fragment>
 }
 
