@@ -91,7 +91,7 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
     }, [])
   }
 
-  const transformBundle = useCallback((bundle) => {
+  const transformBundle = useCallback(bundle => {
     bundle.transactions = getSubBundles(bundle)
     return bundle
   }, [])
