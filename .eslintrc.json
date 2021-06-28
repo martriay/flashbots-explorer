@@ -25,6 +25,7 @@
     "comma-spacing": ["error", { "before": false, "after": true }],
     "indent": ["error", 2],
     "linebreak-style": ["error", "unix"],
+    "eol-last": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "never"],
     "max-len": [
@@ -49,6 +50,7 @@
     "space-in-parens": ["error", "never"],
     "ternary/no-unreachable": "off",
     "ternary/nesting": "off",
+    "@typescript-eslint/no-var-requires": "off",
     "@typescript-eslint/no-unused-vars": "error",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
