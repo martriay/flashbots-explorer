@@ -31,7 +31,7 @@
     "max-len": [
       "error",
       {
-        "code": 140
+        "code": 300
       }
     ],
     "react-hooks/rules-of-hooks": "error",
