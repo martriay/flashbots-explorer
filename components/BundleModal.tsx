@@ -13,7 +13,7 @@ export default function BundleModal({ open, bundle, setOpen }) {
   const goToNextBlock = () => goToBlock(blockNumber + 1);
 
   const handleUserKeyPress = ({ keyCode }) => {
-    if (keyCode == 37) {
+    if (keyCode === 37) {
       goToNextBlock();
     } else if (keyCode === 39) {
       goToPrevBlock();

@@ -50,7 +50,7 @@ export default function Home({ initialBlocks }) {
       <Bundles bundles={ blocks } />
 
       <footer className={styles.footer}>
-        <span>⚠️ beware of <a href="https://marto.lol" target="_blank" rel="noopener noreferrer">marto.lol</a></span>
+        <span>⚠️ beware of <a href="https://marto.lol" target="_blank">marto.lol</a></span>
       </footer>
     </div>
   )
