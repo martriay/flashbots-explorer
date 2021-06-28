@@ -121,23 +121,16 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
   }, [filters, blocks, page, transformBundle])
 
   useEffect(() => {
-    if(blocks.length > filters.limit) {
-      setMorePages(true)
-    }else {
-      setMorePages(false)
-    }
+    setMorePages(blocks.length > filters.limit)
   }, [blocks, filters.limit, setMorePages])
 
   // Automatically update when view is changed
   useEffect(() => {
     if (!pageMutex) {
-      if ((page * filters.limit) + 1 > blocks.length) {
+      if ((page * filters.limit) + 1 > blocks.length || page === 1)) {
         setPageMutex(true)
         getBlocks()
-      } else if (page === 1) {
-        setPageMutex(true)
-        getBlocks()
-      }
+      } 
     }
   }, [filters, page, blocks, pageMutex, getBlocks])
 
