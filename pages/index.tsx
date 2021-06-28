@@ -47,11 +47,11 @@ export default function App() {
             <link rel="stylesheet"
               href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
           </Head>
-          {/*   */}
+          {/* TODO: Implement page routing management here */}
           <Home />
           <footer className={styles.footer}>
             <span>⚠️ beware of <a href="https://marto.lol"
-              target="_blank" 
+              target="_blank"
               rel="noopener noreferrer">marto.lol</a></span>
           </footer>
         </article>

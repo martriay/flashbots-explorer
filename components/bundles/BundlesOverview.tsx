@@ -11,7 +11,7 @@ export default function BundlesOverview() {
   const { blocks, setFilters, filters, page, morePages, setPage } = useBundleData()
   const [bundle, setBundle] = useState(undefined)
   const [searchValue, setSearch] = useState(undefined)
-  const [landingMutex, setLandingMutex] = useState(false)
+  const [landingMutex, setLandingMutex] = useState(true)
 
 
   const setBundleAndOpen = useCallback(bundle => {
@@ -23,13 +23,13 @@ export default function BundlesOverview() {
   }, [])
 
   useEffect(() => {
-    if (router.query.block && blocks.length > 0 && !landingMutex) {
+    if (router.query.block && blocks.length > 0 && landingMutex) {
       const blockNumber = router.query.block as unknown as string
       if (blockNumber) {
         const local = blocks.find(b => b.block_number == blockNumber)
         if (local) {
           setBundleAndOpen(local)
-          setLandingMutex(true)
+          setLandingMutex(false)
         } else if(!filters.block_number) {
           setFilters({
             ...filters,
