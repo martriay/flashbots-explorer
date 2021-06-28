@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.1.1",
-
     "abi-decoder": "^2.4.0",
     "clsx": "^1.1.1",
     "csvtojson": "^2.0.10",
