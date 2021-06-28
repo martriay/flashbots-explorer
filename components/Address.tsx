@@ -1,4 +1,5 @@
 import React from "react"
+
 export const Address = ({ address } : { address: string }) =>  {
   const size = 6
   const shorten = (address: string): string => address.slice(0, size) + "..." + address.slice(-size)
