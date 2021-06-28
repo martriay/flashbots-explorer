@@ -127,10 +127,10 @@ const BundleDataProvider = ({ children }: BundleDataContextProps) => {
   // Automatically update when view is changed
   useEffect(() => {
     if (!pageMutex) {
-      if ((page * filters.limit) + 1 > blocks.length || page === 1)) {
+      if ((page * filters.limit) + 1 > blocks.length || page === 1) {
         setPageMutex(true)
         getBlocks()
-      } 
+      }
     }
   }, [filters, page, blocks, pageMutex, getBlocks])
 

@@ -3,9 +3,9 @@ import React, { useEffect } from "react"
 import { useRouter } from "next/router"
 import * as ga from "../lib/ga"
 import styles from "../styles/Home.module.css"
-import Home from "./Home"
 import { BundleDataProvider } from "../context/BundleData/BundleDataProvider"
 import { TokenDataProvider } from "../context/TokenData/TokenDataProvider"
+import BundlesOverview from "../components/bundles/BundlesOverview"
 
 export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,7 +48,7 @@ export default function App() {
               href="https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css" />
           </Head>
           {/* TODO: Implement page routing management here */}
-          <Home />
+          <BundlesOverview />
           <footer className={styles.footer}>
             <span>⚠️ beware of <a href="https://marto.lol"
               target="_blank"
