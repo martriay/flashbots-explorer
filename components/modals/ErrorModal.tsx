@@ -1,5 +1,5 @@
-import React from "react"
-import { Dialog } from "@headlessui/react"
+import React from "react";
+import { Dialog } from "@headlessui/react";
 
 export const ErrorModal = () => <div>
   <Dialog.Title as="h3"
@@ -7,4 +7,4 @@ export const ErrorModal = () => <div>
     Oops
   </Dialog.Title>
   <div className="">Bundle not found, have this instead:  🍌</div>
-</div>
+</div>;

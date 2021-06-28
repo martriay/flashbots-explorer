@@ -1,6 +1,6 @@
-import React from "react"
-import { BundleTransaction } from "./BundleTransaction"
-import { summarizeFp } from "./Helpers"
+import React from "react";
+import { BundleTransaction } from "./BundleTransaction";
+import { summarizeFp } from "./Helpers";
 
 export const SubBundle = ({ subBundle, index } : { subBundle: any[]; index?: number }) => {
   return <>
@@ -27,5 +27,5 @@ export const SubBundle = ({ subBundle, index } : { subBundle: any[]; index?: num
           </td>
         </tr>
     }
-  </>
-}
+  </>;
+};

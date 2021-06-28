@@ -1,9 +1,9 @@
-import * as React from "react"
-import { useCallback, useEffect } from "react"
-import { useState } from "react"
-import { addABI, decodeLogs } from "abi-decoder"
-import { Interface } from "@ethersproject/abi"
-const DEXES = ["COINGECKO"]
+import * as React from "react";
+import { useCallback, useEffect } from "react";
+import { useState } from "react";
+import { addABI, decodeLogs } from "abi-decoder";
+import { Interface } from "@ethersproject/abi";
+const DEXES = ["COINGECKO"];
 
 export const eventsJson = [
   //erc20
@@ -23,7 +23,7 @@ export const eventsJson = [
   { "text_signature":
     "event Swap(address indexed sender, uint amount0, uint amount1, uint amount0Out, uint amount1Out, address indexed to)" },
   { "text_signature": "event Sync(uint112 reserve0, uint112 reserve1)" }
-]
+];
 
 
 // const USDC = {
@@ -35,12 +35,12 @@ export const eventsJson = [
 //   "logoURI": "https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png?1547042389"
 // };
 
-const uniswapV2GQL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2"
+const uniswapV2GQL = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2";
 const ethQL = `{
   bundles (first:1) {
     ethPrice
   }
-}`
+}`;
 
 
 type TokenDataContextProps = {
@@ -65,31 +65,31 @@ interface ITokenDataContextProps {
 }
 
 
-const TokenDataContext = React.createContext<ITokenDataContextProps | undefined>(undefined)
+const TokenDataContext = React.createContext<ITokenDataContextProps | undefined>(undefined);
 
 const TokenDataProvider = ({ children }: TokenDataContextProps) => {
-  const [tokens, setTokens] = useState<Token[]>([])
+  const [tokens, setTokens] = useState<Token[]>([]);
 
   const loadTokens = useCallback(async () => {
     DEXES.map(d => {
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { tokens } = require(`./tokensList/json${d}.json`)
-      console.log(tokens)
-      setTokens(tokens)
-    })
-  }, [])
+      const { tokens } = require(`./tokensList/json${d}.json`);
+      console.log(tokens);
+      setTokens(tokens);
+    });
+  }, []);
 
   const addEvents = useCallback(async () => {
     eventsJson.map(async e => {
-      const { text_signature } = e
+      const { text_signature } = e;
       try {
-        const i = new Interface([text_signature])
-        await addABI(i.fragments)
+        const i = new Interface([text_signature]);
+        await addABI(i.fragments);
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   const getEthPrice = async () =>  {
     const res = await fetch(uniswapV2GQL, {
@@ -99,32 +99,32 @@ const TokenDataProvider = ({ children }: TokenDataContextProps) => {
         "Content-Type": "application/graphql"
       },
       body: JSON.stringify({ query : ethQL })
-    })
+    });
 
-    const { data: { bundles } } = await res.json()
+    const { data: { bundles } } = await res.json();
 
     if (bundles.length > 0) {
-      return parseFloat(bundles[0].ethPrice).toFixed(6)
+      return parseFloat(bundles[0].ethPrice).toFixed(6);
     }
 
-    return "1"
-  }
+    return "1";
+  };
 
   const getAllLogs = useCallback(async (_logs)  => {
-    const ethPrice = await getEthPrice()
+    const ethPrice = await getEthPrice();
     return decodeLogs(_logs).map(log => {
-      const { coin, logo, decimals } = tokens.find(token => token.address === log.address)
-      let ethValue = "0"
-      let value
+      const { coin, logo, decimals } = tokens.find(token => token.address === log.address);
+      let ethValue = "0";
+      let value;
 
       log.events.map(e => {
         if ((log.name == "Transfer" || log.name == "Swap") && e.type.match("uint")) {
-          value = parseFloat(`${e.value / 10 ** decimals}`).toFixed(2)
+          value = parseFloat(`${e.value / 10 ** decimals}`).toFixed(2);
           if (coin === "WETH") {
-            ethValue = parseFloat(`${value * parseFloat(ethPrice)}`).toFixed(2)
+            ethValue = parseFloat(`${value * parseFloat(ethPrice)}`).toFixed(2);
           }
         }
-      })
+      });
 
       log.coin = {
         address: log.address,
@@ -134,11 +134,11 @@ const TokenDataProvider = ({ children }: TokenDataContextProps) => {
         decimals,
         value,
         ethValue
-      }
+      };
 
-      return log
-    })
-  }, [tokens])
+      return log;
+    });
+  }, [tokens]);
 
   const getReceipts = useCallback(async (transaction) => {
     const jsonrpc = {
@@ -146,7 +146,7 @@ const TokenDataProvider = ({ children }: TokenDataContextProps) => {
       "method": "eth_getTransactionReceipt",
       "params": [],
       "id": 1
-    }
+    };
 
     const params = {
       method: "POST",
@@ -155,28 +155,28 @@ const TokenDataProvider = ({ children }: TokenDataContextProps) => {
         "Content-Type": "application/json"
       },
       body: ""
-    }
+    };
 
-    const { transaction_hash } = transaction
-    jsonrpc.params = [transaction_hash]
-    params.body  = JSON.stringify(jsonrpc)
+    const { transaction_hash } = transaction;
+    jsonrpc.params = [transaction_hash];
+    params.body  = JSON.stringify(jsonrpc);
 
     try {
-      const res = await fetch(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`, params)
-      const { result : { logs } } = await res.json()
-      return getAllLogs(logs)
+      const res = await fetch(`https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`, params);
+      const { result : { logs } } = await res.json();
+      return getAllLogs(logs);
     } catch(e) {
-      console.log(e)
+      console.log(e);
     }
 
-    return []
-  }, [getAllLogs])
+    return [];
+  }, [getAllLogs]);
 
   // Fetch initial
   useEffect(() => {
-    addEvents()
-    loadTokens()
-  }, [addEvents, loadTokens])
+    addEvents();
+    loadTokens();
+  }, [addEvents, loadTokens]);
 
   return (
     <TokenDataContext.Provider
@@ -187,15 +187,15 @@ const TokenDataProvider = ({ children }: TokenDataContextProps) => {
     >
       {children}
     </TokenDataContext.Provider>
-  )
-}
+  );
+};
 
 const useTokenData = () => {
-  const context = React.useContext(TokenDataContext)
+  const context = React.useContext(TokenDataContext);
   if (context === undefined) {
-    throw new Error("useTokenData must be used within a TokenDataContextProvider")
+    throw new Error("useTokenData must be used within a TokenDataContextProvider");
   }
-  return context
-}
+  return context;
+};
 
-export { TokenDataProvider, useTokenData }
+export { TokenDataProvider, useTokenData };

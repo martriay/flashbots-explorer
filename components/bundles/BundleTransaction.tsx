@@ -1,23 +1,23 @@
-import { useRouter } from "next/router"
-import React, { Fragment, useEffect, useState } from "react"
-import { useTokenData } from "../../context/TokenData/TokenDataProvider"
-import { timeNow } from "../../helpers/general"
-import { Address } from "../Address"
-import { ExternalLinkIcon } from "../icons/externalLink.icon"
+import { useRouter } from "next/router";
+import React, { Fragment, useEffect, useState } from "react";
+import { useTokenData } from "../../context/TokenData/TokenDataProvider";
+import { timeNow } from "../../helpers/general";
+import { Address } from "../Address";
+import { ExternalLinkIcon } from "../icons/externalLink.icon";
 
 export const BundleTransaction = (transaction, index: number) => {
-  const [logs, setLogs] = useState([])
-  const { getReceipts } = useTokenData()
-  const router = useRouter()
+  const [logs, setLogs] = useState([]);
+  const { getReceipts } = useTokenData();
+  const router = useRouter();
   const onClick = (e, from) => {
-    e.preventDefault()
-    router.push(`/?from=${from}`, undefined, { shallow: true })
-  }
+    e.preventDefault();
+    router.push(`/?from=${from}`, undefined, { shallow: true });
+  };
 
   useEffect(() => {
-    const getLogs = async () => setLogs(await getReceipts(transaction))
-    getLogs()
-  }, [transaction, getReceipts])
+    const getLogs = async () => setLogs(await getReceipts(transaction));
+    getLogs();
+  }, [transaction, getReceipts]);
 
   const coins = logs.reduce((acc, curr) => {
     if (curr.coin.name && (curr.coin.value || acc[curr.coin.name] === undefined)) {
@@ -27,10 +27,10 @@ export const BundleTransaction = (transaction, index: number) => {
         logo: curr.coin.logo,
         value: curr.coin.value,
         ethValue: curr.coin.ethValue
-      }
+      };
     }
-    return acc
-  }, {})
+    return acc;
+  }, {});
 
   // block_number: 12358944
   // coinbase_transfer: "9785908415014455"
@@ -111,6 +111,6 @@ export const BundleTransaction = (transaction, index: number) => {
         </div>
       </td>
     </tr>
-  </Fragment>
-}
+  </Fragment>;
+};
 

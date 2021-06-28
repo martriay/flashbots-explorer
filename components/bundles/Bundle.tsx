@@ -1,8 +1,8 @@
-import { Dialog } from "@headlessui/react"
-import React from "react"
-import { Block } from "../../context/BundleData/BundleDataProvider"
-import { summarizeFp } from "./Helpers"
-import { SubBundle } from "./Subbundle"
+import { Dialog } from "@headlessui/react";
+import React from "react";
+import { Block } from "../../context/BundleData/BundleDataProvider";
+import { summarizeFp } from "./Helpers";
+import { SubBundle } from "./Subbundle";
 
 interface IBundle {
   bundle: Block
@@ -84,5 +84,5 @@ export const Bundle = ({ bundle }: IBundle) => {
         </div>
       </div>
     </div>
-  </div>
-}
+  </div>;
+};

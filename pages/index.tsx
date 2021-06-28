@@ -1,27 +1,27 @@
-import Head from "next/head"
-import React, { useEffect } from "react"
-import { useRouter } from "next/router"
-import * as ga from "../lib/ga"
-import styles from "../styles/Home.module.css"
-import { BundleDataProvider } from "../context/BundleData/BundleDataProvider"
-import { TokenDataProvider } from "../context/TokenData/TokenDataProvider"
-import BundlesOverview from "../components/bundles/BundlesOverview"
+import Head from "next/head";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import * as ga from "../lib/ga";
+import styles from "../styles/Home.module.css";
+import { BundleDataProvider } from "../context/BundleData/BundleDataProvider";
+import { TokenDataProvider } from "../context/TokenData/TokenDataProvider";
+import BundlesOverview from "../components/bundles/BundlesOverview";
 
 export default function App() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(ga.pageview)
-  const router = useRouter()
+  useEffect(ga.pageview);
+  const router = useRouter();
 
   useEffect(() => {
     const handleRouteChange = (url) => {
-      ga.pageview(url)
-    }
+      ga.pageview(url);
+    };
 
-    router.events.on("routeChangeComplete", handleRouteChange)
+    router.events.on("routeChangeComplete", handleRouteChange);
     return () => {
-      router.events.off("routeChangeComplete", handleRouteChange)
-    }
-  }, [router.events])
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
 
   return (
     <BundleDataProvider>
@@ -57,5 +57,5 @@ export default function App() {
         </article>
       </TokenDataProvider>
     </BundleDataProvider>
-  )
+  );
 }

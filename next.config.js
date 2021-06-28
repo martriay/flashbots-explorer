@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 
 module.exports = {
   env: {
@@ -9,7 +9,7 @@ module.exports = {
     webpack5: true
   },
   webpack: (config) => {
-    config.resolve.fallback = { fs: false }
-    return config
+    config.resolve.fallback = { fs: false };
+    return config;
   }
-}
+};

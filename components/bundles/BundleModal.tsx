@@ -1,9 +1,9 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment, useRef, useCallback } from "react"
-import { Dialog, Transition } from "@headlessui/react"
-import { Bundle } from "../bundles/Bundle"
-import { ErrorModal } from "../modals/ErrorModal"
-import { Block } from "../../context/BundleData/BundleDataProvider"
+import React, { Fragment, useRef, useCallback } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { Bundle } from "../bundles/Bundle";
+import { ErrorModal } from "../modals/ErrorModal";
+import { Block } from "../../context/BundleData/BundleDataProvider";
 
 interface IBundleModal {
   open: boolean
@@ -12,7 +12,7 @@ interface IBundleModal {
 }
 
 export default function BundleModal({ open, bundle, close }: IBundleModal) {
-  const cancelButtonRef = useRef()
+  const cancelButtonRef = useRef();
   // const router = useRouter()
   // const close = () => {
   //   setOpen(false)
@@ -21,12 +21,12 @@ export default function BundleModal({ open, bundle, close }: IBundleModal) {
   //   }
   // }
   const handleClose = useCallback(() => {
-    close()
+    close();
     // router.push insecure error
     // if (bundle) {
     //   router.push("/", undefined, { shallow: true })
     // }
-  }, [close])
+  }, [close]);
 
   // useEffect(() => {
   //   const { block } = router.query
@@ -101,5 +101,5 @@ export default function BundleModal({ open, bundle, close }: IBundleModal) {
         </div>
       </Dialog>
     </Transition>
-  )
+  );
 }

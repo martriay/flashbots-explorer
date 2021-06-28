@@ -1,7 +1,7 @@
-import React from "react"
-import { Block } from "../../context/BundleData/BundleDataProvider"
-import { ExternalLinkIcon } from "../icons/externalLink.icon"
-import { OpenBookIcon } from "../icons/openBook.icon"
+import React from "react";
+import { Block } from "../../context/BundleData/BundleDataProvider";
+import { ExternalLinkIcon } from "../icons/externalLink.icon";
+import { OpenBookIcon } from "../icons/openBook.icon";
 
 interface IBundleRow {
   index: number
@@ -11,9 +11,9 @@ interface IBundleRow {
 
 export const BundleRow = ({ index, bundle, setBundleAndOpen }: IBundleRow) => {
   const onClick = e => {
-    e.preventDefault()
-    setBundleAndOpen(bundle)
-  }
+    e.preventDefault();
+    setBundleAndOpen(bundle);
+  };
 
   return <tr className={ index % 2 ? "bg-gray-50" : "" }>
     <td className="block-number px-6 py-4 whitespace-nowrap text-center">
@@ -47,5 +47,5 @@ export const BundleRow = ({ index, bundle, setBundleAndOpen }: IBundleRow) => {
       <a href="#"
         onClick={ onClick }> { OpenBookIcon }</a>
     </td>
-  </tr>
-}
+  </tr>;
+};
