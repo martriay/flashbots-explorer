@@ -1,0 +1,84 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2020, 
+    "sourceType": "module", 
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["@typescript-eslint", "ternary"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:ternary/recommended"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    "indent": ["error", 2],
+    "linebreak-style": ["error", "unix"],
+    "eol-last": ["error", "always"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+    "max-len": [
+      "error",
+      {
+        "code": 300
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react/prop-types": 0,
+    "react/jsx-max-props-per-line": [2, {
+      "maximum": 1,
+      "when": "always"
+    }],
+    "react/jsx-fragments": "error",
+    "arrow-spacing": "error",
+    "space-infix-ops": "error",
+    "no-trailing-spaces": ["error", { "ignoreComments": true }],
+    "comma-dangle": ["error", "never"],
+    "object-curly-spacing": ["error", "always"],
+    "space-in-parens": ["error", "never"],
+    "ternary/no-unreachable": "off",
+    "ternary/nesting": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-use-before-define": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/camelcase": "off",
+    "@typescript-eslint/interface-name-prefix": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/member-delimiter-style" : ["warn", {
+        "multiline": {
+            "delimiter": "none",
+            "requireLast": true
+        },
+        "singleline": {
+            "delimiter": "semi",
+            "requireLast": false
+        }
+    }]
+  },
+  "ignorePatterns": [
+    ".github/**",
+    ".vscode/**",
+    ".yarn/**",
+    "**/dist/*",
+    "**/node_modules/*"
+  ],
+  "env": {
+    "browser": true,
+    "amd": true,
+    "node": true
+  }
+}

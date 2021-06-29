@@ -2,42 +2,6 @@
   @apply text-5xl mt-14 mb-7 text-center font-semibold;
 }
 
-.search {
-  @apply inline-flex self-center bg-gray-200 items-center mb-7;
-  padding: 0 0 0 1.3rem;
-  border-radius: 2rem;
-}
-
-.search span {
-  @apply hidden sm:inline;
-}
-
-.search input {
-  margin: 0 0 0 1rem;
-  padding: .5rem;
-}
-
-.search button {
-  text-align: center;
-  padding: .6rem 1.3rem .5rem .75rem;
-  font-family: 'Nunito Sans', sans-serif;
-  color: white;
-  border-radius: 0 2rem 2rem 0;
-  align-self: center;
-}
-
-.search button:hover {
-  color: white;
-  box-shadow: 4px 4px 16px #f1f1f1, -4px -4px 16px #e6e6e6;
-  background: linear-gradient(-60deg, #e44e4e, #fa5549, #ffd035, #fa9049, #ff5151);
-  background-size: 400% 400%;
-  animation: Gradient 9s ease infinite;
-  -moz-animation: Gradient 9s ease infinite;
-  -webkit-animation: Gradient 9s ease infinite;
-  transition: 0.1s;
-  outline: none;
-}
-
 .emoji {
   @apply hidden sm:inline;
 }

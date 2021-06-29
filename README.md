@@ -3,6 +3,14 @@
 
 Deployed at https://flashbots-explorer.marto.lol/
 
+## Installation
+
+Firstly, please run preferably `yarn` or alternatively `npm i` to install the dependancies
+
+Then make a copy of the `.env.template` file and rename it to `.env` 
+
+For now, you dont need to make any changes to the file.
+
 ## Development
 This is a create next app project so:
 
