@@ -37,15 +37,16 @@
 .pagination{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
 }
 
 .pagination > * {
-  padding: 0.5rem 1rem;
   transition-duration: 200ms;
   opacity: 1;
 }
 
 .pagination > *:disabled {
-  opacity: 0;
+  opacity: 0.2;
+  cursor: default;
 }
