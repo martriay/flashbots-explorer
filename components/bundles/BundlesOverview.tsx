@@ -13,11 +13,10 @@ export default function BundlesOverview() {
   const [searchValue, setSearch] = useState(undefined);
   const [landingMutex, setLandingMutex] = useState(true);
 
-
   const setBundleAndOpen = useCallback(bundle => {
-    // router.push insecure error
+    // intermittent router.push insecure error
     if (bundle !== undefined) {
-      router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true })
+      router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true });
     }
     setBundle(bundle);
   }, [router]);
@@ -47,7 +46,6 @@ export default function BundlesOverview() {
       }
     }
   }, [router.query.block, blocks, filters, landingMutex, setBundleAndOpen, setFilters]);
-
 
   const submit = e => {
     e.preventDefault();
