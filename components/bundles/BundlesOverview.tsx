@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/router";
-import styles from "./css/BundleOverview.module.css";
+import styles from "../../styles/BundleOverview.module.css";
 import { BundleRow } from "./BundleRow";
 import { useBundleData } from "../../context/BundleData/BundleDataProvider";
 import BundleModal from "./BundleModal";
@@ -16,11 +16,11 @@ export default function BundlesOverview() {
 
   const setBundleAndOpen = useCallback(bundle => {
     // router.push insecure error
-    // if (bundle !== undefined) {
-    //   router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true })
-    // }
+    if (bundle !== undefined) {
+      router.push(`/?block=${bundle?.block_number}`, undefined, { shallow: true })
+    }
     setBundle(bundle);
-  }, []);
+  }, [router]);
 
   useEffect(() => {
     if (router.query.block && blocks.length > 0 && landingMutex) {
