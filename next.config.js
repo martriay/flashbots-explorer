@@ -4,13 +4,9 @@ module.exports = {
   target: "serverless",
   env: {
     NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
-    FLASHBOTS_API_URL: process.env.FLASHBOTS_API_URL
-  },
-  future: {
-    webpack5: true
+    FLASHBOTS_API_URL: process.env.FLASHBOTS_API_URL || "https://blocks.flashbots.net/v1/blocks"
   },
   webpack: (config) => {
-    config.resolve.fallback = { fs: false };
     return config;
   }
 };
