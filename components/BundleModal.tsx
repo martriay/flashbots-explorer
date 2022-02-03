@@ -257,7 +257,7 @@ function BundleTransaction({ transaction, index }) {
       <td className="block-number px-6 py-4 whitespace-nowrap text-center">
         <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
           { ExternalLinkIcon }
-          <span className="ml-3"> { transaction?.transaction_hash.slice(0, 10) }... </span>
+          <TransactionHash hash={transaction?.transaction_hash}/>
         </a>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-center">
@@ -311,6 +311,10 @@ function BundleTransaction({ transaction, index }) {
       </td>
     </tr>
   </Fragment>;
+}
+
+const TransactionHash = ({hash}) => {
+  return <span className="ml-3" style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100px" }}>{hash}</span>
 }
 
 const Error = ({ blockNumber }) => <div>
