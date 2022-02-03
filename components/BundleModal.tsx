@@ -257,7 +257,7 @@ function BundleTransaction({ transaction, index }) {
       <td className="block-number px-6 py-4 whitespace-nowrap text-center">
         <a className="flex text-sm justify-center hover:underline" target="_blank" rel="noreferrer" href={`https://etherscan.io/tx/${ transaction.transaction_hash }`}>
           { ExternalLinkIcon }
-          <TransactionHash hash={transaction?.transaction_hash}/>
+          <TransactionHash hash={transaction?.transaction_hash} />
         </a>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-center">
