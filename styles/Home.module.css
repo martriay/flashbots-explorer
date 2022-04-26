@@ -6,6 +6,7 @@
   @apply inline-flex self-center bg-gray-200 items-center mb-7;
   padding: 0 0 0 1.3rem;
   border-radius: 2rem;
+  margin-left: 0.3rem;
 }
 
 .search span {

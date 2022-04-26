@@ -8,6 +8,7 @@ export default function Bundles({ bundles }) {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
+  const [allBundles, setAllBundles] = useState(bundles);
   const [searchValue, setSearch] = useState(undefined);
 
   useEffect(() => {
@@ -25,7 +26,7 @@ export default function Bundles({ bundles }) {
   };
 
   const findBundleAndOpen = async (blockNumber: string) => {
-    const local = bundles.find(b => b.block_number == blockNumber);
+    const local = allBundles.find(b => b.block_number == blockNumber);
     if (local) {
       setBundleAndOpen(local);
     } else {
@@ -45,12 +46,26 @@ export default function Bundles({ bundles }) {
     findBundleAndOpen(searchValue);
   };
 
+  const refresh = async e => {
+    e.preventDefault();
+    try {
+      const blocks = await getBlocks(undefined);
+      if (blocks) setAllBundles(blocks);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return <div className="w-10/12 self-center text-center">
     <BundleModal open={ openModal } bundle={ bundle } setOpen={ setOpenModal } />
     <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>
       <input type="number" onChange={ e => setSearch(e.target.value) } />
-      <button type="submit"> 🔍</button>
+      <button type="submit"> 🔄</button>
+    </form>
+    <form className={styles.search} >
+      <span>Refresh Blocks</span>
+      <button type="submit" onClick={ refresh }> 🔍</button>
     </form>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -67,7 +82,7 @@ export default function Bundles({ bundles }) {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              { bundles?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
+              { allBundles?.sort(sortBlocks).map((b, i) => <Bundle index={ i } key={ i } bundle={ b } setBundleAndOpen={ setBundleAndOpen } />) }
             </tbody>
           </table>
         </div>
