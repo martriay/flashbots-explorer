@@ -9,6 +9,7 @@ export default function Bundles({ bundles }) {
   const [openModal, setOpenModal] = useState(false);
   const [bundle, setBundle] = useState(undefined);
   const [searchValue, setSearch] = useState(undefined);
+  const [fromAddress, setFromAddress] = useState(undefined);
 
   useEffect(() => {
     if (router.query.block) {
@@ -40,9 +41,15 @@ export default function Bundles({ bundles }) {
     }
   };
 
+  const findBundleByAddress = _add => {
+    if (_add !== undefined) {
+      router.push(`/?from=${_add}`, undefined, { shallow: true });
+    }
+  };
+
   const submit = e => {
     e.preventDefault();
-    findBundleAndOpen(searchValue);
+    findBundleByAddress(fromAddress);
   };
 
   return <div className="w-10/12 self-center text-center">
@@ -50,6 +57,11 @@ export default function Bundles({ bundles }) {
     <form className={styles.search} onSubmit={ submit }>
       <span>Search by block number</span>
       <input type="number" onChange={ e => setSearch(e.target.value) } />
+      <button type="submit"> 🔍</button>
+    </form>
+    <form className={styles.search} onSubmit={ submit }>
+      <span>Filter by from address</span>
+      <input type="text" onChange={ e => setFromAddress(e.target.value) } />
       <button type="submit"> 🔍</button>
     </form>
     <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
